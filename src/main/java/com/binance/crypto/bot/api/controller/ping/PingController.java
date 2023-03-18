@@ -1,6 +1,5 @@
-package com.binance.crypto.bot.api.controller;
+package com.binance.crypto.bot.api.controller.ping;
 
-import com.binance.crypto.bot.api.controller.ping.PingUris;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(PingUris.ROOT)
+@RequestMapping(PingControllerUris.ROOT)
 @RequiredArgsConstructor
 @Slf4j
 public class PingController {

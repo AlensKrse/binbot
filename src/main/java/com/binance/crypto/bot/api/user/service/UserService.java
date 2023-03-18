@@ -5,15 +5,20 @@ import com.binance.crypto.bot.api.actionlogtypes.entity.ActionLog;
 import com.binance.crypto.bot.api.common.passwordvalidator.PasswordValidatorErrorMessage;
 import com.binance.crypto.bot.api.common.passwordvalidator.PasswordValidatorException;
 import com.binance.crypto.bot.api.common.passwordvalidator.PasswordValidatorResult;
+import com.binance.crypto.bot.api.user.data.UserData;
 import com.binance.crypto.bot.api.user.entity.User;
 import com.binance.crypto.bot.api.user.exception.UserAlreadyExistsException;
 import com.binance.crypto.bot.api.user.exception.UserNotFoundException;
 import com.binance.crypto.bot.api.user.repository.UserRepository;
 import com.binance.crypto.bot.api.useractionlog.service.UserActionLogService;
+import com.binance.crypto.bot.api.userpasswordhistories.service.UserPasswordHistoryService;
+import com.binance.crypto.bot.utils.DateUtils;
 import com.binance.crypto.bot.utils.SecurityUtils;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.modelmapper.ModelMapper;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.EnglishSequenceData;
@@ -25,7 +30,7 @@ import org.passay.Rule;
 import org.passay.RuleResult;
 import org.passay.RuleResultDetail;
 import org.passay.WhitespaceRule;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,17 +41,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
 	private static final int MIN_PASSWORD_LENGTH = 8;
 	private static final int MAX_PASSWORD_LENGTH = 40;
 	private static final int LOGIN_MAX_ATTEMPT = 6;
 
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private UserActionLogService userActionLogService;
+	private final UserRepository userRepository;
+	private final UserActionLogService userActionLogService;
+	private final UserPasswordHistoryService userPasswordHistoryService;
+	private final ModelMapper modelMapper;
+	private final PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public Optional<User> findOneByUsername(final String username) {
@@ -65,7 +71,35 @@ public class UserService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public User create(final User user, final String password, final String rawPassword) {
+	public UserData create(final long requestingUserId, final UserData userData){
+		final User userToCreate = createUserEntityFromData(userData);
+
+		final String encodedPassword = passwordEncoder.encode(userData.getRawPassword());
+		final User user = save(userToCreate, encodedPassword, userData.getRawPassword());
+		Validate.notNull(user, "created user is undefined");
+		userPasswordHistoryService.saveUserPassword(user.getId(), encodedPassword);
+
+		return modelMapper.map(loadById(requestingUserId), UserData.class);
+	}
+
+	private User createUserEntityFromData(final UserData userData) {
+		Validate.notNull(userData, "userData is undefined");
+		final User user = new User();
+		user.setName(userData.getName());
+		user.setUsername(userData.getUsername());
+		user.setActive(userData.getActive());
+
+		user.setLastLogin(new Date());
+		user.setAccountNonLocked(userData.getAccountNonLocked());
+		user.setFailedAttempt(0);
+		user.setPasswordExpiry(DateUtils.minusDays(new Date(), 1));
+		user.setLastRequest(new Date());
+
+		return user;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public User save(final User user, final String password, final String rawPassword) {
 		Validate.notNull(user, "user is undefined");
 		Validate.notBlank(user.getUsername(), "username is blank");
 		Validate.notBlank(user.getName(), "name is blank");
