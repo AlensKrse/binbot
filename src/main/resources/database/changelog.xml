@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <include file="database/deltas/tables/users/0001_users.sql"/>
+    <include file="database/deltas/tables/actionlogtypes/0001_create_table_action_log_types.sql"/>
+    <include file="database/deltas/tables/useractionlogs/0001_create_table_user_action_logs.sql"/>
+</databaseChangeLog>

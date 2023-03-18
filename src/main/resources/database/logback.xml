@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/default.xml"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="org/springframework/cloud/gcp/autoconfigure/logging/logback-appender.xml" />
+
+    <root level="INFO">
+        <appender-ref ref="STACKDRIVER"/>
+    </root>
+
+
+</configuration>
