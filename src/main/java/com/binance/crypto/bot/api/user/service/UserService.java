@@ -30,7 +30,7 @@ import org.passay.Rule;
 import org.passay.RuleResult;
 import org.passay.RuleResultDetail;
 import org.passay.WhitespaceRule;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,218 +44,232 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-	private static final int MIN_PASSWORD_LENGTH = 8;
-	private static final int MAX_PASSWORD_LENGTH = 40;
-	private static final int LOGIN_MAX_ATTEMPT = 6;
+    private static final int MIN_PASSWORD_LENGTH = 8;
+    private static final int MAX_PASSWORD_LENGTH = 40;
+    private static final int LOGIN_MAX_ATTEMPT = 6;
 
-	private final UserRepository userRepository;
-	private final UserActionLogService userActionLogService;
-	private final UserPasswordHistoryService userPasswordHistoryService;
-	private final ModelMapper modelMapper;
-	private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserActionLogService userActionLogService;
+    private final UserPasswordHistoryService userPasswordHistoryService;
+    private final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-	@Transactional(readOnly = true)
-	public Optional<User> findOneByUsername(final String username) {
-		return userRepository.findOneByUsername(username);
-	}
+    @Transactional(readOnly = true)
+    public Optional<User> findOneByUsername(final String username) {
+        return userRepository.findOneByUsername(username);
+    }
 
-	@Transactional(readOnly = true)
-	public User loadOneByUsernameAndActiveIsTrue(final String username) {
-		return userRepository.findOneByUsernameAndActiveIsTrue(username)
-			.orElseThrow(() -> new EntityNotFoundException(String.format("User with username '%s' was not found", username)));
-	}
+    @Transactional(readOnly = true)
+    public User loadOneByUsernameAndActiveIsTrue(final String username) {
+        return userRepository.findOneByUsernameAndActiveIsTrue(username)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User with username '%s' was not found", username)));
+    }
 
-	@Transactional(readOnly = true)
-	public User loadById(final long userId) {
-		return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(String.format("user with ID '%s' was not found", userId)));
-	}
+    @Transactional(readOnly = true)
+    public User loadById(final long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(String.format("user with ID '%s' was not found", userId)));
+    }
 
-	@Transactional(rollbackFor = Exception.class)
-	public UserData create(final long requestingUserId, final UserData userData){
-		final User userToCreate = createUserEntityFromData(userData);
+    @Transactional(readOnly = true)
+    public UserData loadUserDataById(final long userId) {
+        final User user = loadById(userId);
+        return UserData.builder().
+                id(user.getId()).
+                name(user.getName()).
+                username(user.getUsername()).
+                roleId(user.getRoleId()).
+                active(user.getActive()).
+                accountNonLocked(user.getAccountNonLocked()).
+                qrCodeEnabled(user.getQrCodeEnabled()).
+                build();
+    }
 
-		final String encodedPassword = passwordEncoder.encode(userData.getRawPassword());
-		final User user = save(userToCreate, encodedPassword, userData.getRawPassword());
-		Validate.notNull(user, "created user is undefined");
-		userPasswordHistoryService.saveUserPassword(user.getId(), encodedPassword);
+    @Transactional(rollbackFor = Exception.class)
+    public UserData create(final long requestingUserId, final UserData userData) {
+        final User userToCreate = createUserEntityFromData(userData);
 
-		return modelMapper.map(loadById(requestingUserId), UserData.class);
-	}
+        final String encodedPassword = passwordEncoder.encode(userData.getRawPassword());
+        final User user = save(userToCreate, encodedPassword, userData.getRawPassword());
+        Validate.notNull(user, "created user is undefined");
+        userPasswordHistoryService.saveUserPassword(user.getId(), encodedPassword);
 
-	private User createUserEntityFromData(final UserData userData) {
-		Validate.notNull(userData, "userData is undefined");
-		final User user = new User();
-		user.setName(userData.getName());
-		user.setUsername(userData.getUsername());
-		user.setActive(userData.getActive());
-		user.setRoleId(userData.getRoleId());
+        return modelMapper.map(loadById(requestingUserId), UserData.class);
+    }
 
-		user.setLastLogin(new Date());
-		user.setAccountNonLocked(userData.getAccountNonLocked());
-		user.setFailedAttempt(0);
-		user.setPasswordExpiry(DateUtils.minusDays(new Date(), 1));
-		user.setLastRequest(new Date());
+    private User createUserEntityFromData(final UserData userData) {
+        Validate.notNull(userData, "userData is undefined");
+        final User user = new User();
+        user.setName(userData.getName());
+        user.setUsername(userData.getUsername());
+        user.setActive(userData.getActive());
+        user.setRoleId(userData.getRoleId());
 
-		return user;
-	}
+        user.setLastLogin(new Date());
+        user.setAccountNonLocked(userData.getAccountNonLocked());
+        user.setFailedAttempt(0);
+        user.setPasswordExpiry(DateUtils.minusDays(new Date(), 1));
+        user.setLastRequest(new Date());
 
-	@Transactional(rollbackFor = Exception.class)
-	public User save(final User user, final String password, final String rawPassword) {
-		Validate.notNull(user, "user is undefined");
-		Validate.notBlank(user.getUsername(), "username is blank");
-		Validate.notBlank(user.getName(), "name is blank");
-		Validate.notBlank(password, "password is blank");
-		validatePassword(rawPassword);
-		Validate.isTrue(user.getQrCodeEnabled(), "User must have two-factor authentication enabled!");
+        return user;
+    }
 
-		if (userRepository.existsByUsername(user.getUsername())) {
-			throw new UserAlreadyExistsException(user.getUsername());
-		}
+    @Transactional(rollbackFor = Exception.class)
+    public User save(final User user, final String password, final String rawPassword) {
+        Validate.notNull(user, "user is undefined");
+        Validate.notBlank(user.getUsername(), "username is blank");
+        Validate.notBlank(user.getName(), "name is blank");
+        Validate.notBlank(password, "password is blank");
+        validatePassword(rawPassword);
+        Validate.isTrue(user.getQrCodeEnabled(), "User must have two-factor authentication enabled!");
 
-		stripEntityHtml(user);
-		user.setPassword(password);
-		userRepository.save(user);
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new UserAlreadyExistsException(user.getUsername());
+        }
 
-		Validate.notNull(user.getId(), "id is undefined for created user '%s'", user);
-		return user;
-	}
+        stripEntityHtml(user);
+        user.setPassword(password);
+        userRepository.save(user);
 
-	private void validatePassword(final String rawPassword) {
-		final PasswordValidatorResult passwordValidatorResult = validatePasswordComplexity(rawPassword);
-		if (!passwordValidatorResult.isValid()) {
-			throw new PasswordValidatorException(passwordValidatorResult.getErrorMessage());
-		}
-	}
+        Validate.notNull(user.getId(), "id is undefined for created user '%s'", user);
+        return user;
+    }
 
-	@Transactional(rollbackFor = Exception.class)
-	public User save(final long userId, final User user, final String password, final String rawPassword) {
-		Validate.notNull(user, "user is undefined");
-		Validate.notBlank(user.getUsername(), "username is blank");
-		Validate.notBlank(user.getName(), "name is blank");
+    private void validatePassword(final String rawPassword) {
+        final PasswordValidatorResult passwordValidatorResult = validatePasswordComplexity(rawPassword);
+        if (!passwordValidatorResult.isValid()) {
+            throw new PasswordValidatorException(passwordValidatorResult.getErrorMessage());
+        }
+    }
 
-		final User existingUser =
-			userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format("User not found by id: '%d'", userId)));
-		Validate.isTrue(existingUser.getQrCodeEnabled(), "User must have two-factor authentication enabled!");
+    @Transactional(rollbackFor = Exception.class)
+    public User save(final long userId, final User user, final String password, final String rawPassword) {
+        Validate.notNull(user, "user is undefined");
+        Validate.notBlank(user.getUsername(), "username is blank");
+        Validate.notBlank(user.getName(), "name is blank");
 
-		if (password != null) {
-			validatePassword(rawPassword);
-			existingUser.setPassword(password);
-		}
+        final User existingUser =
+                userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format("User not found by id: '%d'", userId)));
+        Validate.isTrue(existingUser.getQrCodeEnabled(), "User must have two-factor authentication enabled!");
 
-		stripEntityHtml(user);
+        if (password != null) {
+            validatePassword(rawPassword);
+            existingUser.setPassword(password);
+        }
 
-		existingUser.setName(user.getName());
-		existingUser.setActive(user.getActive());
-		existingUser.setAccountNonLocked(user.getAccountNonLocked());
-		existingUser.setRoleId(user.getRoleId());
+        stripEntityHtml(user);
 
-		userRepository.save(existingUser);
+        existingUser.setName(user.getName());
+        existingUser.setActive(user.getActive());
+        existingUser.setAccountNonLocked(user.getAccountNonLocked());
+        existingUser.setRoleId(user.getRoleId());
 
-		return existingUser;
-	}
+        userRepository.save(existingUser);
 
-	@Transactional(rollbackFor = Exception.class)
-	public User save(final User user) {
-		stripEntityHtml(user);
-		return userRepository.save(user);
-	}
+        return existingUser;
+    }
 
-	private void stripEntityHtml(final User user) {
-		final String username = SecurityUtils.stripHtml(user.getUsername());
+    @Transactional(rollbackFor = Exception.class)
+    public User save(final User user) {
+        stripEntityHtml(user);
+        return userRepository.save(user);
+    }
 
-		user.setUsername(StringUtils.lowerCase(username));
-		user.setName(SecurityUtils.stripHtml(user.getName()));
-		user.setPassword(SecurityUtils.stripHtml(user.getPassword()));
-	}
+    private void stripEntityHtml(final User user) {
+        final String username = SecurityUtils.stripHtml(user.getUsername());
 
-	public PasswordValidatorResult validatePasswordComplexity(final String rawPassword) {
-		Validate.notBlank(rawPassword, "rawPassword is undefined");
-		final PasswordData passwordData = new PasswordData(rawPassword);
-		final PasswordValidator passwordValidator = new PasswordValidator(createPasswordRules());
-		final RuleResult ruleResult = passwordValidator.validate(passwordData);
-		final String errorMessage = getErrorMessage(ruleResult.getDetails()).orElse(null);
+        user.setUsername(StringUtils.lowerCase(username));
+        user.setName(SecurityUtils.stripHtml(user.getName()));
+        user.setPassword(SecurityUtils.stripHtml(user.getPassword()));
+    }
 
-		return PasswordValidatorResult.builder().isValid(ruleResult.isValid()).errorMessage(errorMessage).build();
-	}
+    public PasswordValidatorResult validatePasswordComplexity(final String rawPassword) {
+        Validate.notBlank(rawPassword, "rawPassword is undefined");
+        final PasswordData passwordData = new PasswordData(rawPassword);
+        final PasswordValidator passwordValidator = new PasswordValidator(createPasswordRules());
+        final RuleResult ruleResult = passwordValidator.validate(passwordData);
+        final String errorMessage = getErrorMessage(ruleResult.getDetails()).orElse(null);
 
-	private Optional<String> getErrorMessage(final List<RuleResultDetail> details) {
-		final Optional<String> errorMessage;
-		if (!details.isEmpty()) {
-			final String errorCode = details.get(0).getErrorCode();
-			errorMessage = PasswordValidatorErrorMessage.getById(errorCode).map(PasswordValidatorErrorMessage::getMessage);
-		} else {
-			errorMessage = Optional.empty();
-		}
+        return PasswordValidatorResult.builder().isValid(ruleResult.isValid()).errorMessage(errorMessage).build();
+    }
 
-		return errorMessage;
-	}
+    private Optional<String> getErrorMessage(final List<RuleResultDetail> details) {
+        final Optional<String> errorMessage;
+        if (!details.isEmpty()) {
+            final String errorCode = details.get(0).getErrorCode();
+            errorMessage = PasswordValidatorErrorMessage.getById(errorCode).map(PasswordValidatorErrorMessage::getMessage);
+        } else {
+            errorMessage = Optional.empty();
+        }
 
-	private List<Rule> createPasswordRules() {
-		final List<Rule> passwordRules = new ArrayList<>();
-		passwordRules.add(new LengthRule(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
-		passwordRules.add(new CharacterRule(EnglishCharacterData.Digit, 1));
-		passwordRules.add(new CharacterRule(EnglishCharacterData.UpperCase, 1));
-		passwordRules.add(new CharacterRule(EnglishCharacterData.LowerCase, 1));
-		passwordRules.add(new CharacterRule(EnglishCharacterData.Special, 1));
-		passwordRules.add(new IllegalSequenceRule(EnglishSequenceData.Alphabetical, 5, false));
-		passwordRules.add(new IllegalSequenceRule(EnglishSequenceData.Numerical, 5, false));
-		passwordRules.add(new IllegalSequenceRule(EnglishSequenceData.USQwerty, 5, false));
-		passwordRules.add(new WhitespaceRule());
+        return errorMessage;
+    }
 
-		return passwordRules;
-	}
+    private List<Rule> createPasswordRules() {
+        final List<Rule> passwordRules = new ArrayList<>();
+        passwordRules.add(new LengthRule(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH));
+        passwordRules.add(new CharacterRule(EnglishCharacterData.Digit, 1));
+        passwordRules.add(new CharacterRule(EnglishCharacterData.UpperCase, 1));
+        passwordRules.add(new CharacterRule(EnglishCharacterData.LowerCase, 1));
+        passwordRules.add(new CharacterRule(EnglishCharacterData.Special, 1));
+        passwordRules.add(new IllegalSequenceRule(EnglishSequenceData.Alphabetical, 5, false));
+        passwordRules.add(new IllegalSequenceRule(EnglishSequenceData.Numerical, 5, false));
+        passwordRules.add(new IllegalSequenceRule(EnglishSequenceData.USQwerty, 5, false));
+        passwordRules.add(new WhitespaceRule());
 
-	public void increaseFailedAttempts(final User user) {
-		Validate.notNull(user, "User is undefined");
-		int newFailAttempts = user.getFailedAttempt() + 1;
-		user.setFailedAttempt(newFailAttempts);
+        return passwordRules;
+    }
 
-		userRepository.save(user);
-	}
+    public void increaseFailedAttempts(final User user) {
+        Validate.notNull(user, "User is undefined");
+        int newFailAttempts = user.getFailedAttempt() + 1;
+        user.setFailedAttempt(newFailAttempts);
 
-	@Transactional
-	public void resetUserLoginDataAfterSuccessfulAuth(final long userId, final String ip) {
-		final User user = loadById(userId);
-		user.setLastLogin(new Date());
-		user.setFailedAttempt(0);
-		user.setLastIp(ip);
-		user.setQrCodeCreated(true);
+        userRepository.save(user);
+    }
 
-		userRepository.saveAndFlush(user);
-	}
+    @Transactional
+    public void resetUserLoginDataAfterSuccessfulAuth(final long userId, final String ip) {
+        final User user = loadById(userId);
+        user.setLastLogin(new Date());
+        user.setFailedAttempt(0);
+        user.setLastIp(ip);
+        user.setQrCodeCreated(true);
 
-	public void lockUser(final User user) {
-		Validate.notNull(user, "User is undefined");
-		user.setAccountNonLocked(false);
+        userRepository.saveAndFlush(user);
+    }
 
-		userRepository.save(user);
-	}
+    public void lockUser(final User user) {
+        Validate.notNull(user, "User is undefined");
+        user.setAccountNonLocked(false);
 
-	@Transactional
-	public void setInactive(final long userId) {
-		final User user = loadById(userId);
-		user.setActive(false);
+        userRepository.save(user);
+    }
 
-		userRepository.saveAndFlush(user);
-	}
+    @Transactional
+    public void setInactive(final long userId) {
+        final User user = loadById(userId);
+        user.setActive(false);
 
-	@Transactional(rollbackFor = Exception.class)
-	public void processAuthenticationFailure(final String lowercaseUsername) {
-		final User user = findOneByUsername(lowercaseUsername)
-			.orElseThrow(() -> new EntityNotFoundException(String.format("The username %s doesn't exist", lowercaseUsername)));
+        userRepository.saveAndFlush(user);
+    }
 
-		if (Boolean.TRUE.equals(Objects.nonNull(user) && user.getActive()) && Boolean.TRUE.equals(user.getAccountNonLocked())) {
-			final long userId = user.getId();
-			if (user.getFailedAttempt() < LOGIN_MAX_ATTEMPT) {
-				final String message =
-					String.format("User with id: '%d' entered incorrect password. Login attempt increased to: '%d'", userId, user.getFailedAttempt() + 1);
-				userActionLogService.logUserAction(userId, ActionLog.Type.USER, message);
-				increaseFailedAttempts(user);
-			} else {
-				final String message = String.format("User with id: '%d' locked.", userId);
-				userActionLogService.logUserAction(userId, ActionLog.Type.USER, message);
-				lockUser(user);
-			}
-		}
-	}
+    @Transactional(rollbackFor = Exception.class)
+    public void processAuthenticationFailure(final String lowercaseUsername) {
+        final User user = findOneByUsername(lowercaseUsername)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("The username %s doesn't exist", lowercaseUsername)));
+
+        if (Boolean.TRUE.equals(Objects.nonNull(user) && user.getActive()) && Boolean.TRUE.equals(user.getAccountNonLocked())) {
+            final long userId = user.getId();
+            if (user.getFailedAttempt() < LOGIN_MAX_ATTEMPT) {
+                final String message =
+                        String.format("User with id: '%d' entered incorrect password. Login attempt increased to: '%d'", userId, user.getFailedAttempt() + 1);
+                userActionLogService.logUserAction(userId, ActionLog.Type.USER, message);
+                increaseFailedAttempts(user);
+            } else {
+                final String message = String.format("User with id: '%d' locked.", userId);
+                userActionLogService.logUserAction(userId, ActionLog.Type.USER, message);
+                lockUser(user);
+            }
+        }
+    }
 }

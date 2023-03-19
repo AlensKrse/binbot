@@ -13,20 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthService {
 
-	private final UserService userService;
+    private final UserService userService;
 
-	@Transactional(readOnly = true)
-	public long getUserId() {
-		final User user = getCurrentUser();
-		return Validate.notNull(user.getId(), "id is undefined for user: %s", user);
-	}
+    @Transactional(readOnly = true)
+    public long getUserId() {
+        final User user = getCurrentUser();
+        return Validate.notNull(user.getId(), "id is undefined for user: %s", user);
+    }
 
-	private User getCurrentUser() {
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Validate.notNull(authentication, "authentication is undefined");
+    private User getCurrentUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Validate.notNull(authentication, "authentication is undefined");
 
-		final String username = Validate.notBlank(authentication.getName(), "name is blank for authentication: %s", authentication);
-		final User user = userService.loadOneByUsernameAndActiveIsTrue(username);
-		return Validate.notNull(user, "could not find active user with username '%s'", username);
-	}
+        final String username = Validate.notBlank(authentication.getName(), "name is blank for authentication: %s", authentication);
+        final User user = userService.loadOneByUsernameAndActiveIsTrue(username);
+        return Validate.notNull(user, "could not find active user with username '%s'", username);
+    }
 }

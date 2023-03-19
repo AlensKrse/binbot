@@ -5,7 +5,7 @@ import com.binance.crypto.bot.api.userpasswordhistories.repository.UserPasswordH
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.Validate;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class UserPasswordHistoryService {
 
 	private final UserPasswordHistoryRepository userPasswordHistoryRepository;
-	private final PasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public boolean validatePassword(final long userId, final String newPassword, final int userPasswordHistoryLastCount) {

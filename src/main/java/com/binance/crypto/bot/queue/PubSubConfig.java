@@ -1,4 +1,4 @@
-package com.binance.crypto.bot.config;
+package com.binance.crypto.bot.queue;
 
 import com.google.cloud.spring.pubsub.core.PubSubTemplate;
 import com.google.cloud.spring.pubsub.integration.AckMode;

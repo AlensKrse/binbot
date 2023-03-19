@@ -4,6 +4,8 @@ public class UserControllerUris {
 
     public static final String ROOT = "/users";
     public static final String CREATE = "/create";
+    public static final String USER = "/{userId}";
 
-    private UserControllerUris() {}
+    private UserControllerUris() {
+    }
 }
