@@ -88,6 +88,7 @@ public class UserService {
 		user.setName(userData.getName());
 		user.setUsername(userData.getUsername());
 		user.setActive(userData.getActive());
+		user.setRoleId(userData.getRoleId());
 
 		user.setLastLogin(new Date());
 		user.setAccountNonLocked(userData.getAccountNonLocked());
@@ -146,6 +147,7 @@ public class UserService {
 		existingUser.setName(user.getName());
 		existingUser.setActive(user.getActive());
 		existingUser.setAccountNonLocked(user.getAccountNonLocked());
+		existingUser.setRoleId(user.getRoleId());
 
 		userRepository.save(existingUser);
 

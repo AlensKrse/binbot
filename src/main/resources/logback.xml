@@ -5,6 +5,7 @@
     <include resource="org/springframework/cloud/gcp/autoconfigure/logging/logback-appender.xml" />
 
     <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="STACKDRIVER"/>
     </root>
 

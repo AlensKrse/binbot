@@ -3,6 +3,7 @@ CREATE TABLE users
     id                      BIGSERIAL                   NOT NULL,
     name                    VARCHAR(255)                NOT NULL,
     username                VARCHAR(255)                NOT NULL,
+    role_id                 BIGINT                      NOT NULL,
     password                VARCHAR(255),
     active                  BOOLEAN                              DEFAULT TRUE NOT NULL,
     deleted                 BOOLEAN                              DEFAULT false NOT NULL,
@@ -24,3 +25,13 @@ CREATE TABLE users
 )
     WITH (oids = false
     );
+
+
+ALTER TABLE users
+    ADD CONSTRAINT fk_users_roles FOREIGN KEY (role_id)
+        REFERENCES roles (id);
+
+
+CREATE INDEX idx_users_role_id
+    ON users
+        USING btree ("role_id");

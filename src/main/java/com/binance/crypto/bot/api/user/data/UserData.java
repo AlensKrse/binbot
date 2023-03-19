@@ -12,6 +12,7 @@ public class UserData {
 	private String name;
 	private String username;
 	private String rawPassword;
+	private Long roleId;
 	private Boolean active;
 	private Boolean accountNonLocked;
 	private Boolean qrCodeEnabled;

@@ -33,6 +33,9 @@ public class User extends AuditableEntity {
 	@Column
 	private String username;
 
+	@Column
+	private Long roleId;
+
 	@JsonIgnore
 	@Column
 	private String password;
