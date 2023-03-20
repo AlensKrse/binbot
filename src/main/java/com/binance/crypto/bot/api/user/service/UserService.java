@@ -71,6 +71,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public UserData loadUserDataById(final long userId) {
         final User user = loadById(userId);
         return UserData.builder().

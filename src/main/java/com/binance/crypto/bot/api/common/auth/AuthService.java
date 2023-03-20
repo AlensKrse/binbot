@@ -2,7 +2,9 @@ package com.binance.crypto.bot.api.common.auth;
 
 import com.binance.crypto.bot.api.user.entity.User;
 import com.binance.crypto.bot.api.user.service.UserService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.Validate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,9 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthService {
 
-    private final UserService userService;
+    UserService userService;
 
     @Transactional(readOnly = true)
     public long getUserId() {

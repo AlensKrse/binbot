@@ -5,11 +5,13 @@ import com.binance.crypto.bot.utils.EnumUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -18,11 +20,13 @@ import java.util.Optional;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "action_log_types")
 public class ActionLog extends AuditableEntity {
 
     @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
     public enum Type implements EnumUtils.IdentifiableEnum<Long> {
 
         LOG_IN(1L),
@@ -35,7 +39,7 @@ public class ActionLog extends AuditableEntity {
         USER(8L);
 
 
-        private final long id;
+        long id;
 
         @Override
         public Long getId() {
@@ -56,6 +60,6 @@ public class ActionLog extends AuditableEntity {
     }
 
     @Column
-    private String title;
+    String title;
 
 }

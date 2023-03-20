@@ -1,28 +1,22 @@
-package com.binance.crypto.bot.api.user.data;
+package com.binance.crypto.bot.callback.telegram.response;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-@Builder
+
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserData {
+public class TelegramBotResponseChat {
 
     Long id;
-    String name;
-    String username;
-    Long roleId;
-    String rawPassword;
-    Boolean active;
-    Boolean accountNonLocked;
-    Boolean qrCodeEnabled;
+    String title;
+    String type;
 
 }

@@ -9,10 +9,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 
@@ -20,6 +22,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "users")
 public class User extends AuditableEntity {
@@ -32,60 +35,60 @@ public class User extends AuditableEntity {
     }
 
     @Column
-    private String name;
+    String name;
 
     @Column
-    private String username;
+    String username;
 
     @Column
-    private Long roleId;
+    Long roleId;
 
     @JsonIgnore
     @Column
-    private String password;
+    String password;
 
     @Column
-    private Boolean active;
+    Boolean active;
 
     @Column
-    private Boolean deleted;
+    Boolean deleted;
 
     @Column
-    private Date lastLogin;
+    Date lastLogin;
 
     @Column
-    private Integer failedAttempt;
+    Integer failedAttempt;
 
     @Column
-    private Boolean accountNonLocked;
+    Boolean accountNonLocked;
 
     @Column
-    private String lastIp;
+    String lastIp;
 
     @Column
-    private Date passwordExpiry;
+    Date passwordExpiry;
 
     @Column
-    private Date lastRequest;
+    Date lastRequest;
 
     @Column
-    private Boolean qrCodeEnabled;
+    Boolean qrCodeEnabled;
 
     @Column
-    private String qrCodeSecret;
+    String qrCodeSecret;
 
     @Column
-    private Integer qrCodeValidationCode;
+    Integer qrCodeValidationCode;
 
     @Column
-    private String qrCodeScratchCodes;
+    String qrCodeScratchCodes;
 
     @Column
-    private Boolean qrCodeCreated;
+    Boolean qrCodeCreated;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roleId", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private Role role;
+    Role role;
 
 }

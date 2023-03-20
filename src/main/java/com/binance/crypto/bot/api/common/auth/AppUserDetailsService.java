@@ -5,7 +5,9 @@ import com.binance.crypto.bot.api.roles.entity.Role;
 import com.binance.crypto.bot.api.user.entity.User;
 import com.binance.crypto.bot.api.user.service.UserService;
 import com.binance.crypto.bot.api.useractionlog.service.UserActionLogService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.context.annotation.Primary;
@@ -23,10 +25,11 @@ import java.util.List;
 @Component
 @Primary
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AppUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
-    private final UserActionLogService userActionLogService;
+    UserService userService;
+    UserActionLogService userActionLogService;
 
     @Override
     @Transactional(readOnly = true)
