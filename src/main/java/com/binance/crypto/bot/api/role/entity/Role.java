@@ -1,4 +1,4 @@
-package com.binance.crypto.bot.api.roles.entity;
+package com.binance.crypto.bot.api.role.entity;
 
 import com.binance.crypto.bot.utils.EnumUtils;
 import jakarta.persistence.Column;

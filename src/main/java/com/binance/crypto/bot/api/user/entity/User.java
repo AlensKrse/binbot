@@ -1,14 +1,17 @@
 package com.binance.crypto.bot.api.user.entity;
 
-import com.binance.crypto.bot.api.common.AuditableEntity;
-import com.binance.crypto.bot.api.roles.entity.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,19 +23,17 @@ import java.util.Date;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "users")
-public class User extends AuditableEntity {
+public class User {
 
-    public User() {
-        this.active = true;
-        this.deleted = false;
-        this.qrCodeEnabled = true;
-        this.qrCodeCreated = false;
-    }
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     @Column
     String name;
@@ -86,9 +87,27 @@ public class User extends AuditableEntity {
     @Column
     Boolean qrCodeCreated;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roleId", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonIgnore
-    Role role;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
+    Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
+    Date updated;
+
+    @Version
+    @Column
+    Integer version;
+
+    @PrePersist
+    protected void onCreate() {
+        created = new Date();
+        updated = created;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updated = new Date();
+    }
 
 }

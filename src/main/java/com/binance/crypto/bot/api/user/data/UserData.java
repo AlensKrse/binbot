@@ -1,14 +1,12 @@
 package com.binance.crypto.bot.api.user.data;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-@Builder
 @Getter
 @Setter
 @EqualsAndHashCode

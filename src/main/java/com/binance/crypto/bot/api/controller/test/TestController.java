@@ -1,13 +1,13 @@
 package com.binance.crypto.bot.api.controller.test;
 
-import com.binance.crypto.bot.api.roles.entity.Role;
+import com.binance.crypto.bot.api.common.response.MessageResourceResponse;
+import com.binance.crypto.bot.api.role.entity.Role;
 import com.binance.crypto.bot.queue.QueuePublisher;
 import com.binance.crypto.bot.queue.QueueSubscriber;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +29,11 @@ public class TestController {
 
     @PreAuthorize(Role.ADMIN_CLIENT_ROLES)
     @GetMapping(TestControllerUris.PING)
-    public ResponseEntity<String> ping(final HttpServletRequest request) {
+    public MessageResourceResponse<String> ping(final HttpServletRequest request) {
         Validate.notNull(request, HTTP_SERVLET_REQUEST_IS_UNDEFINED_MESSAGE);
         log.info("Received ping request from '{}'", request.getRemoteAddr());
 
-        return ResponseEntity.ok(RESPONSE);
+        return MessageResourceResponse.success(RESPONSE);
     }
 
     @GetMapping("/postMessage-trade")

@@ -1,7 +1,8 @@
 package com.binance.crypto.bot.api.common.auth;
 
 import com.binance.crypto.bot.api.actionlogtypes.entity.ActionLog;
-import com.binance.crypto.bot.api.roles.entity.Role;
+import com.binance.crypto.bot.api.role.entity.Role;
+import com.binance.crypto.bot.api.role.service.RoleService;
 import com.binance.crypto.bot.api.user.entity.User;
 import com.binance.crypto.bot.api.user.service.UserService;
 import com.binance.crypto.bot.api.useractionlog.service.UserActionLogService;
@@ -29,6 +30,7 @@ import java.util.List;
 public class AppUserDetailsService implements UserDetailsService {
 
     UserService userService;
+    RoleService roleService;
     UserActionLogService userActionLogService;
 
     @Override
@@ -40,7 +42,8 @@ public class AppUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", lowercaseUsername)));
 
         final List<GrantedAuthority> authorities = new ArrayList<>();
-        final Role role = Validate.notNull(user.getRole(), "Role is undefined for user %s", user);
+        final long roleId = Validate.notNull(user.getRoleId(), "Role is undefined for user %s", user);
+        final Role role = roleService.getRoleById(roleId);
         authorities.add(new SimpleGrantedAuthority(role.getName()));
 
         final boolean enabled = user.getActive() && (!user.getDeleted());

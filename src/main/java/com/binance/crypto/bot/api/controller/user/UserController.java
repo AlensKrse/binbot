@@ -1,18 +1,22 @@
 package com.binance.crypto.bot.api.controller.user;
 
 import com.binance.crypto.bot.api.common.auth.AuthService;
-import com.binance.crypto.bot.api.roles.entity.Role;
+import com.binance.crypto.bot.api.common.response.MessageResourceResponse;
+import com.binance.crypto.bot.api.exception.UserCreationException;
+import com.binance.crypto.bot.api.exception.UserRetrievingException;
+import com.binance.crypto.bot.api.role.entity.Role;
 import com.binance.crypto.bot.api.user.data.UserData;
 import com.binance.crypto.bot.api.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,39 +30,33 @@ public class UserController {
     private final AuthService authService;
 
     @PreAuthorize(Role.ADMIN_ROLE)
-    @PostMapping(UserControllerUris.CREATE)
-    public ResponseEntity<UserData> create(
-            final UserData userData, final HttpServletRequest request) {
+    @PostMapping(value = UserControllerUris.CREATE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public MessageResourceResponse<UserData> create(@RequestBody final UserData userData, final HttpServletRequest request) {
         try {
             Validate.notNull(userData, "UserData is undefined");
             Validate.notNull(request, "HttpServletRequest is undefined");
-            log.info(
-                    "Received user creation request from '{}', user: '{}'",
-                    request.getRemoteAddr(),
-                    userData);
-            final long userId = authService.getUserId();
+            log.info("Received user creation request from '{}', user: '{}'", request.getRemoteAddr(), userData);
 
-            final UserData savedUserData = userService.create(userId, userData);
-            return ResponseEntity.ok(savedUserData);
+            final UserData savedUserData = userService.create(userData);
+            return MessageResourceResponse.success(savedUserData);
         } catch (final Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return MessageResourceResponse.failure(new UserCreationException(e.getMessage()));
         }
     }
 
     @PreAuthorize(Role.ADMIN_CLIENT_ROLES)
     @GetMapping(UserControllerUris.USER)
-    public ResponseEntity<UserData> get(
-            @PathVariable final Long userId, final HttpServletRequest request) {
+    public MessageResourceResponse<UserData> get(@PathVariable final Long userId, final HttpServletRequest request) {
         try {
             Validate.notNull(userId, "userId is undefined");
             Validate.notNull(request, "HttpServletRequest is undefined");
-            log.info(
-                    "Received get user request from '{}', userId: '{}'", request.getRemoteAddr(), userId);
+            log.info("Received get user request from '{}', userId: '{}'", request.getRemoteAddr(), userId);
 
-            return ResponseEntity.ok(userService.loadUserDataById(userId));
+            return MessageResourceResponse.success(userService.loadUserDataById(userId));
         } catch (final Exception e) {
-            return ResponseEntity.badRequest().build();
+            log.error(e.getMessage());
+            return MessageResourceResponse.failure(new UserRetrievingException(e.getMessage()));
         }
     }
 }

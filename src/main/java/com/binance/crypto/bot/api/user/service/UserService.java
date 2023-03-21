@@ -18,7 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.modelmapper.ModelMapper;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.EnglishSequenceData;
@@ -34,6 +33,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +51,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserActionLogService userActionLogService;
     private final UserPasswordHistoryService userPasswordHistoryService;
-    private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
@@ -78,19 +77,23 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserData loadUserDataById(final long userId) {
         final User user = loadById(userId);
-        return UserData.builder().
-                id(user.getId()).
-                name(user.getName()).
-                username(user.getUsername()).
-                roleId(user.getRoleId()).
-                active(user.getActive()).
-                accountNonLocked(user.getAccountNonLocked()).
-                qrCodeEnabled(user.getQrCodeEnabled()).
-                build();
+        return getUserData(user);
+    }
+
+    private UserData getUserData(final User user) {
+        final UserData data = new UserData();
+        data.setId(user.getId());
+        data.setName(user.getName());
+        data.setUsername(user.getUsername());
+        data.setRoleId(user.getRoleId());
+        data.setActive(user.getActive());
+        data.setAccountNonLocked(user.getAccountNonLocked());
+        data.setQrCodeEnabled(user.getQrCodeEnabled());
+        return data;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public UserData create(final long requestingUserId, final UserData userData) {
+    public UserData create(final UserData userData) {
         final User userToCreate = createUserEntityFromData(userData);
 
         final String encodedPassword = passwordEncoder.encode(userData.getRawPassword());
@@ -98,7 +101,7 @@ public class UserService {
         Validate.notNull(user, "created user is undefined");
         userPasswordHistoryService.saveUserPassword(user.getId(), encodedPassword);
 
-        return modelMapper.map(loadById(requestingUserId), UserData.class);
+        return getUserData(loadById(user.getId()));
     }
 
     private User createUserEntityFromData(final UserData userData) {
@@ -128,7 +131,7 @@ public class UserService {
         Validate.isTrue(user.getQrCodeEnabled(), "User must have two-factor authentication enabled!");
 
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new UserAlreadyExistsException(user.getUsername());
+            throw new UserAlreadyExistsException(String.format("User with username '%s' already exist", user.getUsername()));
         }
 
         stripEntityHtml(user);
@@ -276,5 +279,21 @@ public class UserService {
                 lockUser(user);
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isPasswordExpired(final long userId) {
+        final User user = loadById(userId);
+        final LocalDate userPasswordExpiry = DateUtils.dateToLocalDate(user.getPasswordExpiry());
+        return userPasswordExpiry.isBefore(LocalDate.now());
+    }
+
+    @Transactional
+    public boolean regenerateQrCode(final long userId) {
+        final User user = loadById(userId);
+        user.setQrCodeCreated(false);
+        userRepository.save(user);
+
+        return true;
     }
 }

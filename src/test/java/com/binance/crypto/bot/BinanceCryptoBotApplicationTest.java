@@ -2,9 +2,16 @@ package com.binance.crypto.bot;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-class BinanceCryptoBotApplicationTest {
+@SpringBootTest
+class BinanceCryptoBotApplicationTest extends BaseIntegrationTest {
+
+    @Test
+    void contextLoads() {
+        Assertions.assertTrue(true);
+    }
 
     @Test
     void testPasswordEncoder() {

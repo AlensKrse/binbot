@@ -16,19 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserActionLogService {
 
 
-	private static final int MIN_STRING_LENGTH = 0;
-	private static final int MAX_STRING_LENGTH = 1024;
+    private static final int MIN_STRING_LENGTH = 0;
+    private static final int MAX_STRING_LENGTH = 1024;
 
-	private final UserActionLogRepository userActionLogRepository;
+    private final UserActionLogRepository userActionLogRepository;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void logUserAction(final long userId, final ActionLog.Type logType, final String action) {
-		Validate.notNull(logType, "Action log type is undefined");
-		Validate.notBlank(action, "Action is blank");
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void logUserAction(final long userId, final ActionLog.Type logType, final String action) {
+        Validate.notNull(logType, "Action log type is undefined");
+        Validate.notBlank(action, "Action is blank");
 
-		final String resultAction = action.length() > MAX_STRING_LENGTH ? action.substring(MIN_STRING_LENGTH, MAX_STRING_LENGTH) : action;
-		final UserActionLog userActionLog = new UserActionLog(userId, logType.getId(), resultAction);
-		userActionLogRepository.save(userActionLog);
-		log.info(action);
-	}
+        final String resultAction = action.length() > MAX_STRING_LENGTH ? action.substring(MIN_STRING_LENGTH, MAX_STRING_LENGTH) : action;
+        final UserActionLog userActionLog = new UserActionLog(userId, logType.getId(), resultAction);
+        userActionLogRepository.save(userActionLog);
+        log.info(action);
+    }
 }

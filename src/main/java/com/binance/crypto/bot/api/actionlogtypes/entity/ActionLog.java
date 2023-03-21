@@ -1,9 +1,9 @@
 package com.binance.crypto.bot.api.actionlogtypes.entity;
 
-import com.binance.crypto.bot.api.common.AuditableEntity;
 import com.binance.crypto.bot.utils.EnumUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,12 +18,12 @@ import java.util.Optional;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "action_log_types")
-public class ActionLog extends AuditableEntity {
+public class ActionLog {
 
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -58,6 +58,10 @@ public class ActionLog extends AuditableEntity {
         }
 
     }
+
+    @Id
+    @Column
+    Long id;
 
     @Column
     String title;
