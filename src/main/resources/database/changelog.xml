@@ -6,4 +6,5 @@
     <include file="database/deltas/tables/users/0001_users.sql"/>
     <include file="database/deltas/tables/actionlogtypes/0001_create_table_action_log_types.sql"/>
     <include file="database/deltas/tables/useractionlogs/0001_create_table_user_action_logs.sql"/>
+    <include file="database/deltas/tables/userpasswordhistories/0001_user_password_histories.sql"/>
 </databaseChangeLog>

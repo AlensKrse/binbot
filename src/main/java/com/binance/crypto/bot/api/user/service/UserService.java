@@ -75,6 +75,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public List<UserData> findAllMapped() {
+        return findAll().stream().map(this::getUserData).toList();
+    }
+
+    @Transactional(readOnly = true)
     public UserData loadUserDataById(final long userId) {
         final User user = loadById(userId);
         return getUserData(user);

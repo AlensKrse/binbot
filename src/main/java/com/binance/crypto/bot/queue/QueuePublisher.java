@@ -15,7 +15,6 @@ public class QueuePublisher {
     @Value("${google.cloud.pub.sub.callback.topic.name}")
     String callbackTopicName;
 
-
     @Value("${google.cloud.pub.sub.trade.topic.name}")
     String tradeTopicName;
 

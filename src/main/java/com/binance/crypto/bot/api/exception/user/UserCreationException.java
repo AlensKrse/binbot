@@ -1,4 +1,4 @@
-package com.binance.crypto.bot.api.exception;
+package com.binance.crypto.bot.api.exception.user;
 
 
 import com.binance.crypto.bot.api.common.response.MessageResourceException;

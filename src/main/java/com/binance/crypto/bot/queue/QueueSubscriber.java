@@ -17,7 +17,6 @@ public class QueueSubscriber {
     @Value("${google.cloud.pub.sub.callback.subscription.name}")
     String callbackSubscriptionName;
 
-
     @Value("${google.cloud.pub.sub.trade.subscription.name}")
     String tradeSubscriptionName;
 

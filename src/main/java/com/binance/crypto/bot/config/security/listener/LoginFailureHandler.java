@@ -12,11 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class LoginFailureHandler implements AuthenticationFailureHandler {
+
+    private static final String USERNAME_PARAMETER = "username";
+
     private final UserService userService;
 
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) {
-        final String lowercaseUsername = StringUtils.lowerCase(request.getParameter("username"));
+        final String lowercaseUsername = StringUtils.lowerCase(request.getParameter(USERNAME_PARAMETER));
         userService.processAuthenticationFailure(lowercaseUsername);
     }
 }

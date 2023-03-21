@@ -37,8 +37,17 @@ public class TelegramBotService {
     private final RestTemplate restTemplate;
 
     public void send(final Exception e) {
+        final String message = getFullMessage(e);
+        sendMessage(message);
+    }
+
+    public void send(final String message) {
+        final String fullMessage = getFullMessage(message);
+        sendMessage(fullMessage);
+    }
+
+    private void sendMessage(final String message) {
         if (isTelegramBotAvailable()) {
-            final String message = getFullMessage(e);
             log.info("Sending telegram message {} ", message);
 
             final HttpEntity<MultiValueMap<String, String>> httpRequest = getMultiValueMapHttpEntity(message);
@@ -58,6 +67,10 @@ public class TelegramBotService {
         final String classLoaderName = stackTraceElement.getClassName();
         final int lineNumber = stackTraceElement.getLineNumber();
         return getMessageHeader() + e.getMessage() + " | " + classLoaderName + "." + lineNumber;
+    }
+
+    private String getFullMessage(final String message) {
+        return getMessageHeader() + message;
     }
 
     private String getMessageHeader() {

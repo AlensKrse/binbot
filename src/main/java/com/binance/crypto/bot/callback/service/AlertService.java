@@ -18,4 +18,8 @@ public class AlertService {
     public void send(final Exception exception) {
         telegramBotService.send(exception);
     }
+
+    public void send(final String message) {
+        telegramBotService.send(message);
+    }
 }
