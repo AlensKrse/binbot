@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Binance Bot Management</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link rel='stylesheet' type="text/css" href="../../static/common.css">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <a class="navbar-brand" th:href="@{/dashboard}">Binance Bot Management</a>
+
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon">
+        </span>
+    </button>
+
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <!--        <ul th:if="${user.roleId == 1}" class="navbar-nav">-->
+        <!--            <li class="nav-item">-->
+        <!--                <a class="nav-link" th:href="@{/users}">User Management</a>-->
+        <!--            </li>-->
+        <!--        </ul>-->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/daemons}">Daemons</a>
+            </li>
+        </ul>
+    </div>
+    <a th:href="@{/logout}" class="btn btn-light" role="button">
+        Logout
+    </a>
+</nav>
+
+<div style="padding: 10px 10px 10px 10px">
+    <div class="row">
+        <div class="col-lg-3">
+            <h1> List daemons </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <a th:href="@{/daemons/new}" class="btn btn-light" role="button">
+                Add daemon</a>
+        </div>
+    </div>
+
+    <br>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-light">
+        <!--        <tr>-->
+        <!--            <th> Name</th>-->
+        <!--            <th> Role</th>-->
+        <!--            <th> Active</th>-->
+        <!--            <th> Action</th>-->
+        <!--        </tr>-->
+        <!--        </thead>-->
+
+        <!--        <tbody>-->
+        <!--        <tr th:each="daemon: ${daemons}">-->
+        <!--            <td th:text="${daemon.name}"></td>-->
+        <!--            <td th:text="${daemon.role}"></td>-->
+        <!--            <td th:text="${daemon.active}"></td>-->
+        <!--            <td>-->
+        <!--                <a th:href="@{/templates/daemon/edit/{id}(id=${daemon.id})}" class="btn btn-light" role="button">-->
+        <!--                    Details-->
+        <!--                </a>-->
+        <!--            </td>-->
+        <!--        </tr>-->
+        <!--        </tbody>-->
+
+    </table>
+</div>
+
+</body>
+</html>

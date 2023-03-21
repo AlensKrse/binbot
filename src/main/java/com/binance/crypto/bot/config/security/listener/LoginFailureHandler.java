@@ -21,5 +21,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) {
         final String lowercaseUsername = StringUtils.lowerCase(request.getParameter(USERNAME_PARAMETER));
         userService.processAuthenticationFailure(lowercaseUsername);
+        throw new UnsupportedOperationException(String.format("Invalid credentials for user: '%s'", lowercaseUsername));
     }
 }

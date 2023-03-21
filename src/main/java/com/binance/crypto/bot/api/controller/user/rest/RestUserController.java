@@ -1,14 +1,14 @@
-package com.binance.crypto.bot.api.controller.user;
+package com.binance.crypto.bot.api.controller.user.rest;
 
 import com.binance.crypto.bot.api.actionlogtypes.entity.ActionLog;
 import com.binance.crypto.bot.api.common.auth.AuthService;
 import com.binance.crypto.bot.api.common.response.MessageResourceResponse;
+import com.binance.crypto.bot.api.controller.user.model.service.PortalUserService;
 import com.binance.crypto.bot.api.exception.user.UserCreationException;
 import com.binance.crypto.bot.api.exception.user.UserListException;
 import com.binance.crypto.bot.api.exception.user.UserRetrievingException;
 import com.binance.crypto.bot.api.role.entity.Role;
 import com.binance.crypto.bot.api.user.data.UserData;
-import com.binance.crypto.bot.api.user.service.UserService;
 import com.binance.crypto.bot.api.useractionlog.service.UserActionLogService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,19 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(UserControllerUris.ROOT)
+@RequestMapping(RestUserControllerUris.ROOT)
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class RestUserController {
 
     private static final String HTTP_SERVLET_REQUEST_IS_UNDEFINED_MESSAGE = "HttpServletRequest is undefined";
 
-    private final UserService userService;
+    private final PortalUserService portalUserService;
     private final AuthService authService;
     private final UserActionLogService userActionLogService;
 
     @PreAuthorize(Role.ADMIN_ROLE)
-    @PostMapping(value = UserControllerUris.CREATE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = RestUserControllerUris.CREATE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public MessageResourceResponse<UserData> create(@RequestBody final UserData userData, final HttpServletRequest request) {
         try {
             Validate.notNull(userData, "UserData is undefined");
@@ -49,7 +49,7 @@ public class UserController {
             log.info(message);
             userActionLogService.logUserAction(requestingUserId, ActionLog.Type.USER, message);
 
-            final UserData savedUserData = userService.create(userData);
+            final UserData savedUserData = portalUserService.create(userData);
             return MessageResourceResponse.success(savedUserData);
         } catch (final Exception e) {
             log.error(e.getMessage());
@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PreAuthorize(Role.ADMIN_CLIENT_ROLES)
-    @GetMapping(UserControllerUris.USER)
+    @GetMapping(RestUserControllerUris.USER)
     public MessageResourceResponse<UserData> get(@PathVariable final Long userId, final HttpServletRequest request) {
         try {
             Validate.notNull(userId, "userId is undefined");
@@ -69,7 +69,7 @@ public class UserController {
             log.info(message);
             userActionLogService.logUserAction(requestingUserId, ActionLog.Type.USER, message);
 
-            return MessageResourceResponse.success(userService.loadUserDataById(userId));
+            return MessageResourceResponse.success(portalUserService.loadUserDataById(userId));
         } catch (final Exception e) {
             log.error(e.getMessage());
             return MessageResourceResponse.failure(new UserRetrievingException(e.getMessage()));
@@ -77,7 +77,7 @@ public class UserController {
     }
 
     @PreAuthorize(Role.ADMIN_ROLE)
-    @GetMapping(UserControllerUris.LIST)
+    @GetMapping(RestUserControllerUris.LIST)
     public MessageResourceResponse<List<UserData>> findAll(final HttpServletRequest request) {
         try {
             Validate.notNull(request, HTTP_SERVLET_REQUEST_IS_UNDEFINED_MESSAGE);
@@ -88,7 +88,7 @@ public class UserController {
             userActionLogService.logUserAction(requestingUserId, ActionLog.Type.USER, message);
 
 
-            return MessageResourceResponse.success(userService.findAllMapped());
+            return MessageResourceResponse.success(portalUserService.findAllData());
         } catch (final Exception e) {
             log.error(e.getMessage());
             return MessageResourceResponse.failure(new UserListException(e.getMessage()));

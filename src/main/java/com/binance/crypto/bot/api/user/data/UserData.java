@@ -18,7 +18,8 @@ public class UserData {
     String name;
     String username;
     Long roleId;
-    String rawPassword;
+    String role;
+    String password;
     Boolean active;
     Boolean accountNonLocked;
     Boolean qrCodeEnabled;

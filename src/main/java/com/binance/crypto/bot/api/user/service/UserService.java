@@ -5,7 +5,6 @@ import com.binance.crypto.bot.api.actionlogtypes.entity.ActionLog;
 import com.binance.crypto.bot.api.common.passwordvalidator.PasswordValidatorErrorMessage;
 import com.binance.crypto.bot.api.common.passwordvalidator.PasswordValidatorException;
 import com.binance.crypto.bot.api.common.passwordvalidator.PasswordValidatorResult;
-import com.binance.crypto.bot.api.user.data.UserData;
 import com.binance.crypto.bot.api.user.entity.User;
 import com.binance.crypto.bot.api.user.exception.UserAlreadyExistsException;
 import com.binance.crypto.bot.api.user.exception.UserNotFoundException;
@@ -74,57 +73,21 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<UserData> findAllMapped() {
-        return findAll().stream().map(this::getUserData).toList();
-    }
-
-    @Transactional(readOnly = true)
-    public UserData loadUserDataById(final long userId) {
-        final User user = loadById(userId);
-        return getUserData(user);
-    }
-
-    private UserData getUserData(final User user) {
-        final UserData data = new UserData();
-        data.setId(user.getId());
-        data.setName(user.getName());
-        data.setUsername(user.getUsername());
-        data.setRoleId(user.getRoleId());
-        data.setActive(user.getActive());
-        data.setAccountNonLocked(user.getAccountNonLocked());
-        data.setQrCodeEnabled(user.getQrCodeEnabled());
-        return data;
-    }
-
     @Transactional(rollbackFor = Exception.class)
-    public UserData create(final UserData userData) {
-        final User userToCreate = createUserEntityFromData(userData);
+    public User create(final User newUser) {
+        newUser.setLastLogin(new Date());
+        newUser.setFailedAttempt(0);
+        newUser.setPasswordExpiry(DateUtils.minusDays(new Date(), 1));
+        newUser.setLastRequest(new Date());
 
-        final String encodedPassword = passwordEncoder.encode(userData.getRawPassword());
-        final User user = save(userToCreate, encodedPassword, userData.getRawPassword());
+        final String encodedPassword = passwordEncoder.encode(newUser.getPassword());
+        final User user = save(newUser, encodedPassword, newUser.getPassword());
         Validate.notNull(user, "created user is undefined");
         userPasswordHistoryService.saveUserPassword(user.getId(), encodedPassword);
 
-        return getUserData(loadById(user.getId()));
+        return loadById(user.getId());
     }
 
-    private User createUserEntityFromData(final UserData userData) {
-        Validate.notNull(userData, "userData is undefined");
-        final User user = new User();
-        user.setName(userData.getName());
-        user.setUsername(userData.getUsername());
-        user.setActive(userData.getActive());
-        user.setRoleId(userData.getRoleId());
-
-        user.setLastLogin(new Date());
-        user.setAccountNonLocked(userData.getAccountNonLocked());
-        user.setFailedAttempt(0);
-        user.setPasswordExpiry(DateUtils.minusDays(new Date(), 1));
-        user.setLastRequest(new Date());
-
-        return user;
-    }
 
     @Transactional(rollbackFor = Exception.class)
     public User save(final User user, final String password, final String rawPassword) {
@@ -147,7 +110,7 @@ public class UserService {
         return user;
     }
 
-    private void validatePassword(final String rawPassword) {
+    public void validatePassword(final String rawPassword) {
         final PasswordValidatorResult passwordValidatorResult = validatePasswordComplexity(rawPassword);
         if (!passwordValidatorResult.isValid()) {
             throw new PasswordValidatorException(passwordValidatorResult.getErrorMessage());

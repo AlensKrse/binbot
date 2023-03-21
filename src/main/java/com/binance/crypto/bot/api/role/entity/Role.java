@@ -28,15 +28,17 @@ public class Role {
 
     public enum Type implements EnumUtils.IdentifiableEnum<Long> {
 
-        ADMINISTRATOR(1L, ADMINISTRATOR_ROLE_NAME),
-        CLIENT(2L, CLIENT_ROLE_NAME);
+        ADMINISTRATOR(1L, ADMINISTRATOR_ROLE_NAME, "Administrator"),
+        CLIENT(2L, CLIENT_ROLE_NAME, "Client");
 
         private final long id;
         private final String code;
+        private final String name;
 
-        Type(final long id, final String code) {
+        Type(final long id, final String code, final String name) {
             this.id = id;
             this.code = code;
+            this.name = name;
         }
 
         public Long getId() {
@@ -45,6 +47,10 @@ public class Role {
 
         public String getCode() {
             return code;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public static Type getTypeById(final long id) {
