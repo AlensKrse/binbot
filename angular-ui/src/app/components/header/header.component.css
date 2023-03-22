@@ -1,0 +1,77 @@
+.user-logo {
+  padding-right: 10px;
+}
+
+.navbar-brand img {
+  width: 93px;
+  height: 43px;
+}
+
+.nav-item .navbar-nav-link {
+  font-size: 14px;
+  color: #fff;
+  padding: 22px 25px;
+}
+
+.nav-item .navbar-nav-link.added-height {
+  line-height: 36px;
+}
+
+.nav-item.active .navbar-nav-link {
+  color: #fff;
+}
+
+.header-bg-color {
+  background-color: #005b99;
+}
+
+.nav-item a:hover {
+  text-decoration: none;
+}
+
+.dropdown-user .navbar-nav-link, .dropdown-user .navbar-nav-link > span {
+  padding-top: .4375rem;
+  padding-bottom: .4375rem;
+}
+
+.dropdown-user .navbar-nav-link > span {
+  display: inline-block;
+}
+
+.dropdown-item {
+  font-size: 14px;
+}
+
+a.dropdown-item {
+  cursor: pointer;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  background-color: inherit;
+}
+
+.img-flag {
+  width: 20px;
+}
+
+.po-dropdown a {
+  white-space: nowrap;
+  color: #005b99 !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: #fff;
+}
+
+
+.remove-icon {
+  margin-left: 5px;
+  font-size: 16px;
+}
+
+.cart-order-link {
+  color: #005b99 !important;
+  cursor: pointer;
+}
+
+
