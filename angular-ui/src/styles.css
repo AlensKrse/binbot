@@ -1,1 +1,260 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.auth-hidden {
+  display: none !important;
+}
+
+
+body {
+  background: #fff;
+  font-size: 15px;
+  font-family: Roboto, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  outline: none !important;
+}
+
+.page-content.full-height-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 71vh;
+}
+
+.page-content {
+  position: relative;
+}
+
+.full-height-content ngx-datatable {
+  position: absolute !important;
+  height: auto !important;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+}
+
+.container-fluid.full-height-content ngx-datatable {
+  left: 0;
+}
+
+.label {
+  padding: 5px;
+  font-size: 12px;
+}
+
+.document-type-invoice {
+  color: #ff883c;
+}
+
+.document-type-unknown {
+  color: #676563;
+}
+
+.datatable-body-row .actions {
+  display: none;
+}
+
+.datatable-body-row:hover .actions {
+  display: block;
+}
+
+.datatable-body-row.deleted-row {
+  text-decoration: line-through !important;
+}
+
+.tooltip.show {
+  opacity: 1;
+}
+
+.tooltip-inner {
+  max-width: 600px;
+  border: 1px solid #dfdfdf;
+  background: #fff;
+  color: #000;
+}
+
+.mat-fab.mat-primary, .mat-mini-fab.mat-primary, .mat-raised-button.mat-primary {
+  background-color: #302d4d;
+}
+
+.mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {
+  color: #302d4d;
+}
+
+.ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover, .ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover .datatable-row-group {
+  background-color: #ecf7ff;
+  -webkit-box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.mat-form-field-ripple {
+  background-color: #302d4d;
+}
+
+.mat-checkbox-checked.mat-primary .mat-checkbox-background, .mat-checkbox-indeterminate.mat-primary .mat-checkbox-background {
+  background-color: #302d4d;
+}
+
+.toast-top-right {
+  margin-top: 70px;
+}
+
+.auth-hidden {
+  display: none !important;
+}
+
+.auth-visible {
+  display: initial !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.content-wrapper {
+  width: 100%;
+}
+
+.multiline-tooltip {
+  white-space: pre-line !important;
+}
+
+.indent-placeholder .mat-form-field-placeholder.mat-empty {
+  text-indent: 90px !important;
+}
+
+.indent-placeholder .mat-form-field-placeholder, .indent-placeholder.mat-focused .mat-form-field-placeholder {
+  text-indent: 0 !important;
+}
+
+.iti--separate-dial-code .iti__selected-flag {
+  background: none !important;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 95%;
+  }
+}
+
+.toggle-children {
+  height: 10px;
+  width: 10px;
+  background-size: contain;
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.node-content-wrapper-active, .node-content-wrapper.node-content-wrapper-active:hover, .node-content-wrapper-active.node-content-wrapper-focused {
+  background: #edf1f3;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #f5fbff;
+}
+
+.mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #302d4d;
+}
+
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: rgba(0, 0, 0, .87);
+}
+
+.mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
+  background: #302d4d;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+  background-color: #302d4d;
+}
+
+.breadcrumb {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: #fff;
+  border-radius: 0.25rem;
+}
+
+.datatable-body-cell-label a {
+  color: #302d4d;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 1px solid #eee;
+  border-top: 0;
+  padding-top: 0 !important;
+  font-weight: normal;
+  color: #302d4d;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #eee;
+}
+
+
+.table tbody tr td {
+  font-size: 10pt;
+  font-weight: 300;
+  vertical-align: middle !important;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #ecf7ff;
+  cursor: pointer;
+}
+
+.settings-icon {
+  color: #999999;
+  font-size: 16pt;
+  cursor: pointer;
+}
+
+.table-borderless, .table-borderless tbody tr {
+  border: 0;
+}
+
+.table-bold-font, .table-bold-font tbody tr, .table-bold-font tbody tr td {
+  font-size: 12pt;
+  font-weight: 400;
+}
+
+.mat-radio-button.mat-primary.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #302d4d;
+}
+
+.mat-radio-button.mat-primary .mat-radio-inner-circle, .mat-radio-button.mat-primary .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-primary.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-primary:active .mat-radio-persistent-ripple {
+  background-color: #302d4d;
+}
+
+.label.user-state-active {
+  color: #fff;
+  background-color: #1c5732;
+  border: 1px solid #266247;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.label.user-state-inactive {
+  color: #fff;
+  background-color: #56110e;
+  border: 1px solid #59120e;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+

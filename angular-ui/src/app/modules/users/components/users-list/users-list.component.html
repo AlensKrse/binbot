@@ -1,0 +1,70 @@
+<div class="page-content container pt-0 full-height-content">
+  <div class="content-wrapper">
+    <div class="content">
+
+      <button class="admin-buttons-padding" mat-stroked-button color="primary" style="margin-right: 10px"
+              (click)="saveUser()">
+        <mat-icon>add</mat-icon>
+        New
+      </button>
+
+      <mat-form-field style="width:80vw" appearance="standard">
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyUserFilter()" placeholder="Filter" #input>
+      </mat-form-field>
+
+      <div class="table-container">
+
+        <table class="table table-hover" #userSort="matSort" mat-table [dataSource]="userDataSource" matSort>
+          <caption></caption>
+          <ng-container matColumnDef="id">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header="id"> ID</th>
+            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header="name"> Name</th>
+            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="username">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header="username"> Username</th>
+            <td mat-cell *matCellDef="let row"> {{row.username}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="active">
+            <th scope="col" mat-header-cell *matHeaderCellDef mat-sort-header="active"> Active</th>
+            <td mat-cell *matCellDef="let row">
+              <span *ngIf="row.active == true" role="button" class="label user-state-active">ACTIVE</span>
+              <span *ngIf="row.active == false" role="button" class="label user-state-inactive">INACTIVE</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th scope="col" mat-header-cell *matHeaderCellDef> Action</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-icon class="settings-icon" matTooltip="Edit"
+                        (click)="openUser(row)">
+                settings
+              </mat-icon>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="userDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: userDisplayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+
+      </div>
+      <mat-paginator #userPaginator [pageSizeOptions]="[5, 10, 25, 100]"
+                     aria-label="Select page of users"></mat-paginator>
+
+
+    </div>
+  </div>
+
+</div>
+

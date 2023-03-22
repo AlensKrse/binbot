@@ -3,6 +3,7 @@ import {AuthService} from '../../../../services/auth.service';
 import {TokenStorageService} from '../../../../services/token-storage.service';
 import {Router} from "@angular/router";
 import {NavigationPath} from "../../../../helpers/navigation-path";
+import {UserService} from "../../../users/services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -17,15 +18,13 @@ export class LoginComponent implements OnInit {
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
-  roles: string[] = [];
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) {
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private userService: UserService, private router: Router) {
   }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
-      this.roles = this.tokenStorage.getUser().roles;
       this.navigateToDashboard();
     }
   }
@@ -35,12 +34,12 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(username, password).subscribe(
       data => {
-        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveToken(data.token);
         this.tokenStorage.saveUser(data);
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.roles = this.tokenStorage.getUser().roles;
+        this.userService.resetUserLoginDataAfterSuccessfulAuth();
         this.navigateToDashboard();
       },
       err => {

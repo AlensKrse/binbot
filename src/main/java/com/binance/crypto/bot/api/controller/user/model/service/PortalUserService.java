@@ -45,7 +45,7 @@ public class PortalUserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void updateData(final long userId, final UserData userData) {
+    public UserData updateData(final long userId, final UserData userData) {
         Validate.notNull(userData, "user is undefined");
         Validate.notBlank(userData.getUsername(), "username is blank");
         Validate.notBlank(userData.getName(), "name is blank");
@@ -62,7 +62,7 @@ public class PortalUserService {
         existingUser.setActive(userData.getActive());
         existingUser.setRoleId(userData.getRoleId());
 
-        userService.save(existingUser);
+        return mapToUserData(userService.save(existingUser));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -112,5 +112,20 @@ public class PortalUserService {
         user.setLastRequest(new Date());
 
         return user;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void resetUserLoginDataAfterSuccessfulAuth(final long userId, final String ip) {
+        userService.resetUserLoginDataAfterSuccessfulAuth(userId, ip);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isPasswordExpired(final long userId) {
+        return userService.isPasswordExpired(userId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean regenerateQrCode(final long userId) {
+        return userService.regenerateQrCode(userId);
     }
 }

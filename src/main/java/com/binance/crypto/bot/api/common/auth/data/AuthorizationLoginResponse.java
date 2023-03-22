@@ -10,8 +10,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @EqualsAndHashCode
 @Builder
 @NoArgsConstructor
@@ -23,7 +21,7 @@ import java.util.List;
 public class AuthorizationLoginResponse {
     Long id;
     String username;
-    List<String> roles;
+    Long roleId;
     String token;
     String type;
 

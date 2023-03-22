@@ -1,0 +1,112 @@
+{
+  "application_name": "BinBot",
+  "request": {
+    "generic_error": "There was a problem with your request.",
+    "file_upload_size_too_big": "File {{file}} exceeds the maximum allowed size: {{maxSize}}",
+    "invalid_format_only_specified_is_allowed": "File {{file}} is in incorrect format. Only {{allowed}} files are allowed"
+  },
+  "general": {
+    "add": "Add",
+    "reset": "Reset",
+    "save_as_draft": "Save as Draft",
+    "search": "Search",
+    "continue": "Continue",
+    "close": "Close",
+    "submit": "Submit",
+    "remove": "Remove",
+    "exit": "Exit",
+    "create": "Create",
+    "cancel": "Cancel",
+    "save": "Save",
+    "yes": "Yes",
+    "no": "No",
+    "apply": "Apply",
+    "clear": "Clear",
+    "confirmation": "Confirmation",
+    "back": "Back",
+    "approve": "Approve",
+    "approved": "Approved",
+    "generic_error": "There was a problem with your request.",
+    "export_csv": "Export",
+    "refresh": "Refresh",
+    "more_filters": "Filters",
+    "forgot_password": {
+      "success": "Your password has been reset, please check your email.",
+      "instructions": "Check your email for the instructions on how to reset your password",
+      "email_validation": "Please enter a valid email address",
+      "username_validation": "Username is required",
+      "restore": "Restore",
+      "restoring": "Restoring"
+    },
+    "login": {
+      "email_validation": "Please enter a valid email address",
+      "email_is_required": "Username is required",
+      "password_is_required": "Password is required",
+      "login": "Sign in",
+      "signing_in": "Signing in",
+      "forgot_password": "Forgot your password?",
+      "username": "Username",
+      "password": "Password",
+      "mfa_dialog": {
+        "title": "Type authentication code, that you've received by e-mail",
+        "submit": "Verify"
+      },
+      "app_qr_code_dialog": {
+        "title": "Two-factor authentication",
+        "create_code": "Scan the QR code below with an authentication application, such as Google Authenticator, on your phone.",
+        "input": "Type the code created by authentication app on your phone."
+      }
+    },
+    "errors": {
+      "optimistic_locking_failed": "Record you are trying to update was modified by another user, please refresh the page and try again"
+    },
+    "validation_errors": {
+      "required": "Value is required.",
+      "isNaN": "Value must be a number.",
+      "nonUnique": "Value is not unique.",
+      "inclusiveRangeError": "Value must be between {{min}} and {{max}}.",
+      "min": "Value must be greater or equal to {{ min }}.",
+      "minlength": "Min length is {{ requiredLength }} symbols.",
+      "maxlength": "Max length is {{ requiredLength }} symbols.",
+      "startsWith": "Must begin with '{{ expected }}'.",
+      "isNumericDecimal": "Value must be a decimal number.",
+      "pattern": "Incorrect format",
+      "all_fields_required": "All fields are required!"
+    },
+    "confirmations": {
+      "yes": "OK",
+      "no": "Cancel"
+    }
+  },
+  "header": {
+    "system": "System",
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "change_password": "Change password",
+    "logout": "Log Out",
+    "balances": "Balances",
+    "daemons": "Daemons"
+  },
+  "languages": {
+    "en": "English",
+    "lv": "LV",
+    "ee": "EE",
+    "lt": "LT",
+    "ru": "Русский"
+  },
+  "users": {
+    "roles": {
+      "1": "Administrator",
+      "2": "Client"
+    }
+  },
+  "balances": {
+    "title": "Balances",
+    "sub_title": "",
+    "columns": {
+      "id": "ID",
+      "title": "Title",
+      "active": "Active"
+    }
+  }
+}

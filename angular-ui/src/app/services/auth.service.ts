@@ -15,7 +15,6 @@ export class AuthService {
 
   protected path = '/auth';
 
-
   constructor(private http: HttpClient, private tokenStorageService: TokenStorageService) {
   }
 

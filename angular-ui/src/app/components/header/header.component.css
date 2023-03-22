@@ -1,3 +1,9 @@
+.logo {
+  width: 50px;
+  display: flex;
+}
+
+
 .user-logo {
   padding-right: 10px;
 }
@@ -13,7 +19,7 @@
   padding: 22px 25px;
 }
 
-.nav-item .navbar-nav-link.added-height {
+.nav-item .navbar-nav-link.added-height .nav-link {
   line-height: 36px;
 }
 

@@ -26,4 +26,11 @@ export class HeaderComponent implements OnInit {
   openChangePasswordDialog() {
 
   }
+
+  logout() {
+    if (confirm("Are you sure you want to logout?")) {
+      this.authService.logout();
+      this.router.navigateByUrl('/login');
+    }
+  }
 }

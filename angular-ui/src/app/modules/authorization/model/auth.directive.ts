@@ -1,8 +1,7 @@
 import {Directive, ElementRef, Input} from '@angular/core';
 import {RoleEnum} from "../enums/role-enum";
 import {AuthService} from "../../../services/auth.service";
-
-declare const $: any;
+import * as $ from 'jquery';
 
 @Directive({
   selector: '[auth]'

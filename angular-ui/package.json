@@ -1,6 +1,6 @@
 {
-  "name": "angular12-jwt-auth",
-  "version": "0.0.0",
+  "name": "bin-bot",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,7 +21,18 @@
     "@angular/platform-browser-dynamic": "~12.0.2",
     "@angular/router": "~12.0.2",
     "@material/dialog": "^12.0.0",
+    "@ngx-translate/core": "~13.0.0",
+    "@ngx-translate/http-loader": "^6.0.0",
+    "@types/jquery": "^3.3.38",
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.5.1",
+    "material-design-icons": "^3.0.1",
+    "mdb-angular-ui-kit": "~1.0.0",
+    "ngx-toastr": "^14.1.4",
+    "popper.js": "^1.16.1-lts",
     "rxjs": "~6.6.0",
+    "sweetalert2": "^10.3.5",
+    "toastr": "^2.1.4",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
   },
