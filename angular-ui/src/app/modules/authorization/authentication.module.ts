@@ -3,12 +3,14 @@ import {CommonModule} from "@angular/common";
 import {RouterModule} from "@angular/router";
 import {AuthenticationRoutingModule} from "./authentication-routing.module";
 import {BrowserModule} from "@angular/platform-browser";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AuthInterceptor} from "../../helpers/auth.interceptor";
 import {IsAuthenticatedGuard} from "./guards/is-authenticated-guard";
 import {AuthService} from "../../services/auth.service";
 import {AuthDirective} from "./model/auth.directive";
 import {LoginComponent} from "./components/login/login.component";
+import {MatCardModule} from "@angular/material/card";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
   imports: [
@@ -17,6 +19,9 @@ import {LoginComponent} from "./components/login/login.component";
     AuthenticationRoutingModule,
     BrowserModule,
     FormsModule,
+    MatCardModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   providers: [
     AuthInterceptor,

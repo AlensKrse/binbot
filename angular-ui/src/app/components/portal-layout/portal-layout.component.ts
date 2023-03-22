@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {NavigationPath} from "../../helpers/navigation-path";
 
 @Component({
   selector: 'app-portal-layout',
@@ -9,11 +7,10 @@ import {NavigationPath} from "../../helpers/navigation-path";
 })
 export class PortalLayoutComponent implements OnInit {
 
-  constructor(private router: Router) {
+  constructor() {
   }
 
   ngOnInit() {
-    this.router.navigateByUrl(NavigationPath.DASHBOARD);
   }
 
 }
