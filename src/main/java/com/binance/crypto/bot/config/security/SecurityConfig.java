@@ -5,6 +5,7 @@ import com.binance.crypto.bot.config.jwt.AuthTokenFilter;
 import com.binance.crypto.bot.config.jwt.AuthenticationEntryPointJwt;
 import com.binance.crypto.bot.config.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 
 @Configuration
@@ -30,6 +37,9 @@ public class SecurityConfig implements WebMvcConfigurer {
     private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationEntryPointJwt unauthorizedHandler;
+
+    @Value("${application.server.address}")
+    private String applicationServerAddress;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -64,6 +74,18 @@ public class SecurityConfig implements WebMvcConfigurer {
         authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Collections.singletonList(applicationServerAddress));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return new CorsFilter(source);
     }
 
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class LoginFailureHandler implements AuthenticationFailureHandler {
+public class LoginFormFailureHandler implements AuthenticationFailureHandler {
 
     private static final String USERNAME_PARAMETER = "username";
 

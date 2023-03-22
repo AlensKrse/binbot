@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class LoginFormSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private final UserService userService;
 
