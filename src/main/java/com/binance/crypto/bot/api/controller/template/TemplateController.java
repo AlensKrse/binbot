@@ -1,6 +1,6 @@
 package com.binance.crypto.bot.api.controller.template;
 
-import com.binance.crypto.bot.api.common.auth.AuthService;
+import com.binance.crypto.bot.api.common.auth.service.AuthService;
 import com.binance.crypto.bot.api.controller.user.model.service.PortalUserService;
 import com.binance.crypto.bot.api.role.entity.Role;
 import com.binance.crypto.bot.api.user.data.UserData;

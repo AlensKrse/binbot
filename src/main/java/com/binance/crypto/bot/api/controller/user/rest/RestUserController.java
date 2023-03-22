@@ -1,7 +1,7 @@
 package com.binance.crypto.bot.api.controller.user.rest;
 
 import com.binance.crypto.bot.api.actionlogtypes.entity.ActionLog;
-import com.binance.crypto.bot.api.common.auth.AuthService;
+import com.binance.crypto.bot.api.common.auth.service.AuthService;
 import com.binance.crypto.bot.api.common.response.MessageResourceResponse;
 import com.binance.crypto.bot.api.controller.user.model.service.PortalUserService;
 import com.binance.crypto.bot.api.exception.user.UserCreationException;

@@ -3,13 +3,13 @@
 Application Stack:
 Java 17, Lombok,
 Spring Boot Web application, Spring Boot Cloud
-Spring Boot Security, JWT Tokenization (OAuth2), QR Code Two-factor authentication,
+Spring Boot Security, JWT Tokenization, QR Code Two-factor authentication,
 Spring Boot JPA, Liquibase, Postgres, Hibernate,
 Spring Boot Test, Junit 5, Mockito, H2 Integration Tests
 GCP Logging,
 GCP Pub/sub (queue),
 Maven, GIT, Docker, Gitlab Pipeline, GCP Cloud Run,
-Thymeleaf, HTML, CSS, Angular.
+Thymeleaf, HTML, CSS, Angular 12 (node v12.14).
 
 Todo list:
 Add possibility to receive all functionality of project by api and by UI.

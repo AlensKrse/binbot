@@ -1,4 +1,4 @@
-package com.binance.crypto.bot.api.common.auth;
+package com.binance.crypto.bot.api.common.auth.service;
 
 import com.binance.crypto.bot.api.actionlogtypes.entity.ActionLog;
 import com.binance.crypto.bot.api.role.entity.Role;
