@@ -33,6 +33,8 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
 
+    private static final String API_AUTH_LOGIN_PATH = "/api/auth/login";
+
     private final AppUserDetailsService appUserDetailsService;
     private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -41,6 +43,9 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Value("${application.server.address}")
     private String applicationServerAddress;
 
+    @Value("${server.ssl.enabled}")
+    private Boolean serverSslEnabled;
+
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter(jwtUtils, appUserDetailsService);
@@ -48,14 +53,16 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests().requestMatchers("/api/auth/login").permitAll()
-                .anyRequest().authenticated();
+        http.cors().and().csrf().disable();
+        http.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        if (Boolean.TRUE.equals(serverSslEnabled)) {
+            http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
+        }
+
+        http.authorizeHttpRequests().requestMatchers(API_AUTH_LOGIN_PATH).permitAll().anyRequest().authenticated();
         http.authenticationProvider(authenticationProvider());
-
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
