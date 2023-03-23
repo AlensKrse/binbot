@@ -80,6 +80,7 @@
   },
   "header": {
     "system": "System",
+    "my-user": "My User",
     "dashboard": "Dashboard",
     "users": "Users",
     "change_password": "Change password",

@@ -19,7 +19,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +41,7 @@ public class RestUserController {
     private final UserActionLogService userActionLogService;
 
     @PreAuthorize(Role.ADMIN_ROLE)
-    @PostMapping(value = RestUserControllerUris.CREATE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping
     public MessageResourceResponse<UserData> create(@NonNull @RequestBody final UserData userData, @NonNull final HttpServletRequest request) {
         try {
             final long requestingUserId = authService.getUserId();
@@ -91,8 +90,8 @@ public class RestUserController {
     }
 
     @PreAuthorize(Role.ADMIN_ROLE)
-    @PutMapping(RestUserControllerUris.USER)
-    public MessageResourceResponse<UserData> updateUser(@PathVariable final long userId, @NonNull final UserData userData, @NonNull final HttpServletRequest request) {
+    @PostMapping(RestUserControllerUris.USER)
+    public MessageResourceResponse<UserData> updateUser(@PathVariable final long userId, @NonNull @RequestBody final UserData userData, @NonNull final HttpServletRequest request) {
         try {
             final long requestingUserId = authService.getUserId();
             final String message = String.format("User with id '%d' edit user from '%s' for user with id: '%d', userdata: '%s'", requestingUserId, request.getRemoteAddr(), userId, userData);

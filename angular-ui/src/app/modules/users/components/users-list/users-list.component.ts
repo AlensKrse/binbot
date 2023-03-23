@@ -23,7 +23,7 @@ export class UsersListComponent implements OnInit {
 
   userDataSource!: MatTableDataSource<User>;
 
-  userDisplayedColumns: string[] = ['id', 'name', 'username', 'active'];
+  userDisplayedColumns: string[] = ['id', 'name', 'username', 'active', 'accountNonLocked'];
 
   @ViewChild('userPaginator') userPaginator!: MatPaginator;
   @ViewChild('userSort') userSort!: MatSort;
@@ -34,15 +34,17 @@ export class UsersListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.getUsers().then(result => {
-      if (!isNullOrUndefined(result) && result.success) {
-        this.userDataSource = new MatTableDataSource(result.body);
-        this.userDataSource.paginator = this.userPaginator;
-        this.userDataSource.sort = this.userSort;
-      } else {
-        this.alertService.error("Error during user list loading")
-      }
-    });
+    if (this.isAdmin()) {
+      this.userService.getUsers().then(result => {
+        if (!isNullOrUndefined(result) && result.success) {
+          this.userDataSource = new MatTableDataSource(result.body);
+          this.userDataSource.paginator = this.userPaginator;
+          this.userDataSource.sort = this.userSort;
+        } else {
+          this.alertService.error("Error during user list loading")
+        }
+      });
+    }
   }
 
   applyUserFilter() {
@@ -63,5 +65,9 @@ export class UsersListComponent implements OnInit {
     this.zone.run(() => {
       this.router.navigate(['/users/' + user.id]);
     });
+  }
+
+  isAdmin() {
+    return this.authService.isAdmin();
   }
 }

@@ -1,6 +1,5 @@
 package com.binance.crypto.bot.api.controller.user.model.service;
 
-import com.binance.crypto.bot.api.role.entity.Role;
 import com.binance.crypto.bot.api.user.data.UserData;
 import com.binance.crypto.bot.api.user.entity.User;
 import com.binance.crypto.bot.api.user.service.UserService;
@@ -46,9 +45,9 @@ public class PortalUserService {
 
     @Transactional(rollbackFor = Exception.class)
     public UserData updateData(final long userId, final UserData userData) {
-        Validate.notNull(userData, "user is undefined");
-        Validate.notBlank(userData.getUsername(), "username is blank");
-        Validate.notBlank(userData.getName(), "name is blank");
+        Validate.notNull(userData, "User is undefined");
+        Validate.notBlank(userData.getUsername(), "Username is blank");
+        Validate.notBlank(userData.getName(), "Name is blank");
 
         final User existingUser = userService.loadById(userId);
 
@@ -61,6 +60,7 @@ public class PortalUserService {
         existingUser.setName(userData.getName());
         existingUser.setActive(userData.getActive());
         existingUser.setRoleId(userData.getRoleId());
+        existingUser.setAccountNonLocked(userData.getAccountNonLocked());
 
         return mapToUserData(userService.save(existingUser));
     }
@@ -89,7 +89,6 @@ public class PortalUserService {
         data.setName(user.getName());
         data.setUsername(user.getUsername());
         data.setRoleId(user.getRoleId());
-        data.setRole(Role.Type.getTypeById(user.getRoleId()).getName());
         data.setActive(user.getActive());
         data.setAccountNonLocked(user.getAccountNonLocked());
         data.setQrCodeEnabled(user.getQrCodeEnabled());

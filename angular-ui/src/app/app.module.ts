@@ -23,6 +23,8 @@ import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {AlertService} from "./services/alert.service";
 import {MatIconModule} from "@angular/material/icon";
 import {DaemonsModule} from "./modules/daemons/daemons.module";
+import {NotificationService} from "./helpers/notification.service";
+import {ToastrModule} from "ngx-toastr";
 
 
 @NgModule({
@@ -42,6 +44,15 @@ import {DaemonsModule} from "./modules/daemons/daemons.module";
     MdbCollapseModule,
     MatButtonModule,
     MatIconModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-center',
+      closeButton: true,
+      newestOnTop: true,
+      progressBar: true,
+      preventDuplicates: false,
+
+    }),
 
     TranslateModule.forRoot({
       loader: {
@@ -58,7 +69,7 @@ import {DaemonsModule} from "./modules/daemons/daemons.module";
 
   ],
   exports: [TranslateModule],
-  providers: [authInterceptorProviders, SecureHttpClientService, HttpClientService, PageLoadingService, AlertService],
+  providers: [authInterceptorProviders, SecureHttpClientService, HttpClientService, PageLoadingService, AlertService, NotificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

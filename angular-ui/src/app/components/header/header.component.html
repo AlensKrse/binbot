@@ -18,23 +18,23 @@
         id="jumbotronExample"
       >
         <ul class="navbar-nav me-auto my-auto mb-2 mb-lg-0 justify-content-center">
-          <li class="nav-item" routerLinkActive="active" aria-current="page" auth="administrator,client">
+          <li class="nav-item" routerLinkActive="active" aria-current="page" *ngIf="isAdminOrClient()">
             <a [routerLink]="['/dashboard']" class="nav-link text-sm-center">
               <img class="logo" [src]="'/assets/images/bot-logo.png'" [alt]="'BinBot'"
                    [title]="'BinBot'"/>
             </a>
           </li>
-          <li class="nav-item" routerLinkActive="active" auth="administrator">
+          <li class="nav-item" routerLinkActive="active" *ngIf="isAdmin()">
             <a [routerLink]="['/users']" class="nav-link">{{"header.users" | translate}}</a>
           </li>
-          <li class="nav-item" routerLinkActive="active" auth="administrator,client">
+          <li class="nav-item" routerLinkActive="active" *ngIf="isAdmin()">
             <a [routerLink]="['/daemons']" class="nav-link">{{"header.daemons" | translate}}</a>
           </li>
         </ul>
       </div>
       <div class="text-right">
         <button style="margin-right: 10px" mat-button
-                (click)="openChangePasswordDialog()">{{"header.change_password" | translate}}</button>
+                (click)="navigateToMyUser()">{{"header.my-user" | translate}}</button>
         <button mat-raised-button color="primary" (click)="logout()">{{"header.logout" | translate}}</button>
       </div>
     </div>

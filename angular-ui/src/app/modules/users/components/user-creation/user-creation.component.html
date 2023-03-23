@@ -1,1 +1,106 @@
-<p>user-creation works!</p>
+<div class="page-content container pt-0 full-height-content">
+  <div class="content-wrapper">
+    <div class="content">
+
+      <button *ngIf="isAdmin()" class="admin-buttons-padding" mat-stroked-button
+              color="primary"
+              (click)="regenerateQrCode()">
+        <mat-icon>cached</mat-icon>
+        Regenerate QR Code
+      </button>
+
+
+      <div class="row">
+
+        <div
+          class="col-md-6 col-lg-4 col-sm-12">
+          <h5>General</h5>
+          <div class="group-padding">
+            <form [formGroup]="form">
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <mat-form-field class="full-width mb-2">
+                    <input matInput placeholder="Username" value="" formControlName="username">
+                    <mat-error *ngIf="form.get('username')!.errors">
+                      Please enter valid username
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-form-field class="full-width mb-2">
+                    <input matInput placeholder="Full name" value="" formControlName="name">
+                    <mat-error *ngIf="form.get('name')!.errors">
+                      Please enter name and surname
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="isAdmin()">
+                <div class="col-sm-6">
+                  <mat-form-field class="full-width mb-2">
+                    <input type="password" matInput placeholder="Password" value=""
+                           formControlName="password">
+                    <mat-error *ngIf="form.get('password')!.errors">
+                      Password must be at least 8 symbols long, contain 1 uppercase character, 1 lowercase
+                      character, 1 digit and 1 special character.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                  <mat-form-field class="full-width mb-2">
+                    <input type="password" matInput placeholder="Confirm password" value=""
+                           formControlName="confirmPassword">
+                    <mat-error *ngIf="form.get('confirmPassword')!.errors || !passwordConfirmed()">
+                      Please confirm entered password
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="isAdmin()">
+                <div class="col-sm-12">
+                  <mat-form-field class="full-width mb-2">
+                    <mat-select formControlName="roleId" placeholder="Role">
+                      <mat-option *ngFor="let role of getRoles()" [value]="role.id">
+                        {{ role.name | translate }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form.get('roleId')!.errors">
+                      Role required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+
+              <mat-checkbox *ngIf="isAdmin()" color="primary" class="full-width mb-2" formControlName="active">Active
+              </mat-checkbox>
+              <br/>
+              <mat-checkbox *ngIf="isAdmin()" color="primary" class="full-width mb-2"
+                            formControlName="accountNonLocked">Non
+                Locked
+              </mat-checkbox>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="isAdmin()">
+        <div class="col-md-8 col-lg-4 col-sm-8">
+          <div class="text-right">
+            <button mat-button type="button" (click)="backToList()">CANCEL</button>
+            <button mat-raised-button color="primary" (click)="submit()"
+                    [disabled]="getRequestInProgress()">SAVE
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+</div>

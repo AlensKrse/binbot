@@ -1,0 +1,38 @@
+.group-padding {
+  padding: .75rem;
+}
+
+.table-container {
+  margin-top: 10px;
+  max-height: 327px;
+  overflow: auto;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+.admin-buttons-padding {
+  margin-bottom: 20px;
+  margin-right: 5px;
+}
+
+.filter-by-name {
+  color: #818181;
+  font-size: 10pt;
+  font-weight: 400;
+  border-bottom: none;
+  padding-left: 10px;
+}
+
+.filter-by-name-icon {
+  color: #d3d3d3;
+}
+
+.mat-radio-group {
+  display: flex;
+  margin-top: 10px;
+  gap: 20px;
+  width: 100%;
+}

@@ -99,6 +99,13 @@ public class User {
     @Column
     Integer version;
 
+    public User() {
+        this.active = true;
+        this.deleted = false;
+        this.qrCodeEnabled = true;
+        this.qrCodeCreated = false;
+    }
+
     @PrePersist
     protected void onCreate() {
         created = new Date();

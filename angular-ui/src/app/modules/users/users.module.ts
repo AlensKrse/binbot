@@ -6,6 +6,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {UserCreationComponent} from './components/user-creation/user-creation.component';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {UsersRoutingModule} from "./users-routing.module";
+import {AuthenticationModule} from "../authorization/authentication.module";
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import {UsersRoutingModule} from "./users-routing.module";
 
     MatSortModule,
     MatPaginatorModule,
+    AuthenticationModule,
   ],
   declarations: [
     UsersListComponent,
