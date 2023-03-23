@@ -18,10 +18,11 @@ export class AuthService {
   constructor(private http: HttpClient, private tokenStorageService: TokenStorageService) {
   }
 
-  login(username: string, password: string): Observable<any> {
+  login(username: string, password: string, code: string): Observable<any> {
     return this.http.post(AppSettings.API_ENDPOINT + this.path + '/login', {
       username,
-      password
+      password,
+      code
     }, httpOptions);
   }
 

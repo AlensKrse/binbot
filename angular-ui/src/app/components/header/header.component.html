@@ -17,17 +17,14 @@
         class="collapse navbar-collapse"
         id="jumbotronExample"
       >
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+        <ul class="navbar-nav me-auto my-auto mb-2 mb-lg-0 justify-content-center">
           <li class="nav-item" routerLinkActive="active" aria-current="page" auth="administrator,client">
             <a [routerLink]="['/dashboard']" class="nav-link text-sm-center">
               <img class="logo" [src]="'/assets/images/bot-logo.png'" [alt]="'BinBot'"
                    [title]="'BinBot'"/>
             </a>
           </li>
-          <li class="nav-item active" routerLinkActive="active" aria-current="page" auth="administrator,client">
-            <a [routerLink]="['/dashboard']" class="nav-link">{{ "header.dashboard" | translate }}</a>
-          </li>
-          <li class="nav-item" routerLinkActive="active" auth="administrator,client">
+          <li class="nav-item" routerLinkActive="active" auth="administrator">
             <a [routerLink]="['/users']" class="nav-link">{{"header.users" | translate}}</a>
           </li>
           <li class="nav-item" routerLinkActive="active" auth="administrator,client">

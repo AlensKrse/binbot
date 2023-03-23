@@ -21,4 +21,6 @@ public class AuthorizationLoginRequest {
     @NotBlank
     String password;
 
+    String code;
+
 }

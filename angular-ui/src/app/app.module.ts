@@ -22,6 +22,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {AlertService} from "./services/alert.service";
 import {MatIconModule} from "@angular/material/icon";
+import {DaemonsModule} from "./modules/daemons/daemons.module";
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import {MatIconModule} from "@angular/material/icon";
     AuthenticationModule,
     DashboardModule,
     UsersModule,
+    DaemonsModule,
 
   ],
   exports: [TranslateModule],

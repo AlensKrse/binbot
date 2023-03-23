@@ -4,6 +4,9 @@ import {TokenStorageService} from '../../../../services/token-storage.service';
 import {Router} from "@angular/router";
 import {NavigationPath} from "../../../../helpers/navigation-path";
 import {UserService} from "../../../users/services/user.service";
+import {MatDialog} from "@angular/material/dialog";
+import {GoogleCodeDialogComponent} from "../google-code-dialog/google-code-dialog.component";
+import {AlertService} from "../../../../services/alert.service";
 
 @Component({
   selector: 'app-login',
@@ -17,9 +20,9 @@ export class LoginComponent implements OnInit {
   };
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = '';
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private userService: UserService, private router: Router) {
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private userService: UserService,
+              private router: Router, private matDialog: MatDialog, private alertService: AlertService) {
   }
 
   ngOnInit(): void {
@@ -32,21 +35,46 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     const {username, password} = this.form;
 
-    this.authService.login(username, password).subscribe(
-      data => {
-        this.tokenStorage.saveToken(data.token);
-        this.tokenStorage.saveUser(data);
+    this.authService.login(username, password, '').subscribe(
+      result => {
+        if (result.success) {
+          this.isLoginFailed = true;
+          return;
+        }
+        this.matDialog.open(GoogleCodeDialogComponent, {
+          width: '400px',
+          data: {
+            codeCreated: result.qrCodeGenerated,
+            otpAutUrl: result.otpAuthURL
+          },
+        }).afterClosed().subscribe(code => {
+          this.authService.login(username, password, code).subscribe(
+            finalResult => {
+              if (finalResult.success) {
+                this.tokenStorage.saveToken(finalResult.token);
+                this.tokenStorage.saveUser(finalResult);
 
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.userService.resetUserLoginDataAfterSuccessfulAuth();
-        this.navigateToDashboard();
+                this.isLoginFailed = false;
+                this.isLoggedIn = true;
+                this.userService.resetUserLoginDataAfterSuccessfulAuth();
+                this.navigateToDashboard();
+              } else {
+                this.showError('Invalid MFA code');
+              }
+            }, () => {
+              this.showError('Invalid MFA code');
+            });
+        })
       },
-      err => {
-        this.errorMessage = err.error.message;
-        this.isLoginFailed = true;
+      () => {
+        this.showError('Invalid Credentials');
       }
     );
+  }
+
+  private showError(message: string) {
+    this.alertService.error(message);
+    this.isLoginFailed = true;
   }
 
   private navigateToDashboard() {

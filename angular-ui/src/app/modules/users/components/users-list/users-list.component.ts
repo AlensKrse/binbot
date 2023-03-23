@@ -9,7 +9,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {User} from "../../models/user";
 import {UserService} from "../../services/user.service";
 import {AlertService} from "../../../../services/alert.service";
-import {UserCreationComponent} from "../user-creation/user-creation.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-users-list',
@@ -23,14 +23,14 @@ export class UsersListComponent implements OnInit {
 
   userDataSource!: MatTableDataSource<User>;
 
-  userDisplayedColumns: string[] = ['id', 'name', 'username', 'active', 'action'];
+  userDisplayedColumns: string[] = ['id', 'name', 'username', 'active'];
 
   @ViewChild('userPaginator') userPaginator!: MatPaginator;
   @ViewChild('userSort') userSort!: MatSort;
 
 
   constructor(private zone: NgZone, private formBuilder: FormBuilder, private authService: AuthService, private userService: UserService,
-              private dialog: MatDialog, private alertService: AlertService) {
+              private dialog: MatDialog, private alertService: AlertService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -54,19 +54,14 @@ export class UsersListComponent implements OnInit {
     }
   }
 
-  openUser(user: User) {
-    const dialogRef = this.dialog.open(UserCreationComponent, {});
-    dialogRef.componentInstance.setUser(user);
-    dialogRef.afterClosed().subscribe(() => {
-      this.ngOnInit();
-    });
+  createUser() {
+    this.router.navigate(['/users/create']);
+
   }
 
-  saveUser() {
-    const dialogRef = this.dialog.open(UserCreationComponent, {});
-    dialogRef.afterClosed().subscribe(() => {
-      this.ngOnInit();
+  openDetails(user) {
+    this.zone.run(() => {
+      this.router.navigate(['/users/' + user.id]);
     });
   }
-
 }

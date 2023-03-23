@@ -76,7 +76,7 @@ public class RestUserController {
 
     @PreAuthorize(Role.ADMIN_ROLE)
     @GetMapping(RestUserControllerUris.LIST)
-    public MessageResourceResponse<List<UserData>> findAll(@NonNull final HttpServletRequest request) {
+    public MessageResourceResponse<List<UserData>> list(@NonNull final HttpServletRequest request) {
         try {
             final long requestingUserId = authService.getUserId();
             final String message = String.format("User with id '%d' requested list of users from '%s'", requestingUserId, request.getRemoteAddr());

@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{ "general.login.app_qr_code_dialog.title" | translate }}</h1>
+<div mat-dialog-content>
+  <p style="font-size: small" *ngIf="codeCreated">{{"general.login.app_qr_code_dialog.create_code" | translate}}</p>
+
+  <div class="qr-code" *ngIf="codeCreated">
+    <qrcode [qrdata]="qrCode" [width]="256" [errorCorrectionLevel]="'M'" [elementType]="'url'"></qrcode>
+  </div>
+
+  <p style="font-size: small">{{"general.login.app_qr_code_dialog.input" | translate}}</p>
+
+  <div>
+    <code-input [isCharsCode]="false" [codeLength]="6" (codeCompleted)="onCodeCompleted($event)"></code-input>
+  </div>
+
+</div>
+<div mat-dialog-actions>
+  <div class="dialog-buttons text-right">
+    <button mat-button (click)="onCancelClick()">{{ "general.cancel" | translate }}</button>
+  </div>
+</div>

@@ -30,7 +30,7 @@ public class PortalUserService {
 
     @Transactional(rollbackFor = Exception.class)
     public List<UserData> findAllData() {
-        return userService.findAll().stream().map(this::mapToUserData).sorted(Comparator.comparing(UserData::getName)).toList();
+        return userService.findAll().stream().map(this::mapToUserData).sorted(Comparator.comparing(UserData::getId)).toList();
     }
 
     @Transactional(rollbackFor = Exception.class)

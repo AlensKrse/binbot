@@ -21,7 +21,7 @@ export class AuthDirective {
     this.authRoles = this.auth.split(',');
 
     for (const authRole of this.authRoles) {
-      let role = null;
+      let role;
       switch (authRole.replace(' ', '')) {
         case 'administrator':
           role = RoleEnum.ADMINISTRATOR;

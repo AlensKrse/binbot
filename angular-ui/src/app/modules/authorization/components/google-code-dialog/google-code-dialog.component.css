@@ -1,0 +1,12 @@
+.dialog-buttons {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.qr-code {
+  display: flex;
+  justify-content: center;
+}

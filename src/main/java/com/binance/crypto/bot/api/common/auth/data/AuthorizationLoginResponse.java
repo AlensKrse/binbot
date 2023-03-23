@@ -19,10 +19,14 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthorizationLoginResponse {
+
+    boolean success;
     Long id;
     String username;
     Long roleId;
     String token;
     String type;
+    boolean qrCodeGenerated;
+    String otpAuthURL;
 
 }

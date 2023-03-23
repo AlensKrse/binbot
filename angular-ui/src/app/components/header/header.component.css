@@ -4,6 +4,17 @@
 }
 
 
+ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+li {
+  align-self: center;
+}
+
 .user-logo {
   padding-right: 10px;
 }

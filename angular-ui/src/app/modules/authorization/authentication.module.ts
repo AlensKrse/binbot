@@ -11,6 +11,12 @@ import {AuthDirective} from "./model/auth.directive";
 import {LoginComponent} from "./components/login/login.component";
 import {MatCardModule} from "@angular/material/card";
 import {MatInputModule} from "@angular/material/input";
+import {GoogleCodeDialogComponent} from "./components/google-code-dialog/google-code-dialog.component";
+import {QRCodeModule} from "angularx-qrcode";
+import {CodeInputModule} from "angular-code-input";
+import {MatDialogModule} from "@angular/material/dialog";
+import {TranslateModule} from "@ngx-translate/core";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   imports: [
@@ -22,6 +28,12 @@ import {MatInputModule} from "@angular/material/input";
     MatCardModule,
     MatInputModule,
     ReactiveFormsModule,
+    QRCodeModule,
+    CodeInputModule,
+    MatDialogModule,
+    TranslateModule,
+    MatButtonModule,
+
   ],
   providers: [
     AuthInterceptor,
@@ -30,13 +42,16 @@ import {MatInputModule} from "@angular/material/input";
   ],
   exports: [
     AuthDirective,
+    TranslateModule,
   ],
 
   declarations: [
     LoginComponent,
+    GoogleCodeDialogComponent,
     AuthDirective,
   ],
 
 })
 export class AuthenticationModule {
 }
+
