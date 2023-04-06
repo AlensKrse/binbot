@@ -1,6 +1,5 @@
 package com.binance.crypto.bot.api.backgroundjob.useractive;
 
-import com.binance.crypto.bot.BaseIntegrationTest;
 import com.binance.crypto.bot.api.role.entity.Role;
 import com.binance.crypto.bot.api.user.entity.User;
 import com.binance.crypto.bot.api.user.repository.UserRepository;
@@ -18,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
-class UserActivityCheckServiceTest extends BaseIntegrationTest {
+class UserActivityCheckServiceTest {
 
     private static final int EXPIRATION_DAYS = 90;
 

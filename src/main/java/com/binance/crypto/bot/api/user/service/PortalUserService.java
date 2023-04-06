@@ -1,8 +1,7 @@
-package com.binance.crypto.bot.api.controller.user.model.service;
+package com.binance.crypto.bot.api.user.service;
 
 import com.binance.crypto.bot.api.user.data.UserData;
 import com.binance.crypto.bot.api.user.entity.User;
-import com.binance.crypto.bot.api.user.service.UserService;
 import com.binance.crypto.bot.api.userpasswordhistories.service.UserPasswordHistoryService;
 import com.binance.crypto.bot.utils.DateUtils;
 import lombok.NonNull;
